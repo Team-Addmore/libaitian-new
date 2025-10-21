@@ -15,7 +15,7 @@ export default function Header() {
             <Link href="/about" className="text-white hover:text-brand-accent transition-colors">
               Home
             </Link>
-            <Link href="/products" className="text-white hover:text-brand-accent transition-colors">
+            <Link href="/travel" className="text-white hover:text-brand-accent transition-colors">
               Libaitian-Trevel
             </Link>
             <Link href="/shop" className="text-white hover:text-brand-accent transition-colors">
