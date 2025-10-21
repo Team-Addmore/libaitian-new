@@ -13,19 +13,19 @@ export default function Header() {
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
             <Link href="/about" className="text-white hover:text-brand-accent transition-colors">
-              회사소개
+              Home
             </Link>
             <Link href="/products" className="text-white hover:text-brand-accent transition-colors">
-              제품
+             Libaitian-Trevel
             </Link>
             <Link href="/shop" className="text-white hover:text-brand-accent transition-colors">
-              쇼핑몰
+              Libaitian-Wechat
             </Link>
             <Link href="/board" className="text-white hover:text-brand-accent transition-colors">
-              게시판
+              ...
             </Link>
             <Link href="/contact" className="text-white hover:text-brand-accent transition-colors">
-              문의
+              ...
             </Link>
           </nav>
 
