@@ -2,16 +2,26 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+### 1. 의존성 설치
+
+프로젝트를 클론한 후 반드시 의존성을 먼저 설치해야 합니다:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
+# 또는
+npm install
+# 또는
+yarn install
+```
+
+### 2. 개발 서버 실행
+
+```bash
 pnpm dev
-# or
-bun dev
+# 또는
+npm run dev
+# 또는
+yarn dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
