@@ -16,16 +16,16 @@ export default function Header() {
               Home
             </Link>
             <Link href="/products" className="text-white hover:text-brand-accent transition-colors">
-             Libaitian-Trevel
+              Libaitian-Trevel
             </Link>
             <Link href="/shop" className="text-white hover:text-brand-accent transition-colors">
               Libaitian-Wechat
             </Link>
             <Link href="/board" className="text-white hover:text-brand-accent transition-colors">
-              ...
+              •••
             </Link>
             <Link href="/contact" className="text-white hover:text-brand-accent transition-colors">
-              ...
+              •••
             </Link>
           </nav>
 
