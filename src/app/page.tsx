@@ -1,103 +1,96 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <>
+      {/* Hero Section - 메인 비주얼 */}
+      <section className="relative bg-black text-white" style={{ height: '792px' }}>
+        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+          <div className="text-center max-w-4xl px-4">
+            <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              LIBAITIAN
+            </h1>
+            <p className="text-xl md:text-2xl mb-8">
+              대한민국의 혁신을 이끌어가는 리바이티엔입니다
+            </p>
+            <div className="flex gap-4 justify-center">
+              <a
+                href="/about"
+                className="px-8 py-3 bg-white text-black font-medium rounded-md hover:bg-gray-200 transition-colors"
+              >
+                회사 소개
+              </a>
+              <a
+                href="/products"
+                className="px-8 py-3 border-2 border-white text-white font-medium rounded-md hover:bg-white hover:text-black transition-colors"
+              >
+                제품 보기
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
+      {/* About Section - 회사 소개 */}
+      <section className="py-24 bg-white">
+        <div className="max-w-[980px] mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-brand-primary mb-4">회사 소개</h2>
+            <p className="text-xl text-gray-600">리바이티엔은 혁신적인 기술로 미래를 선도합니다</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6">
+              <div className="text-5xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold mb-2">비전</h3>
+              <p className="text-gray-600">글로벌 시장을 선도하는 기업</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="text-5xl mb-4">💡</div>
+              <h3 className="text-xl font-bold mb-2">혁신</h3>
+              <p className="text-gray-600">끊임없는 연구개발</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="text-5xl mb-4">🤝</div>
+              <h3 className="text-xl font-bold mb-2">신뢰</h3>
+              <p className="text-gray-600">고객과의 약속을 지킵니다</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Products Section - 제품 소개 */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-[980px] mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-brand-primary mb-4">주요 제품</h2>
+            <p className="text-xl text-gray-600">최고의 품질을 자랑하는 제품들</p>
+          </div>
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+              <h3 className="text-2xl font-bold mb-4">제품 1</h3>
+              <p className="text-gray-600 mb-4">제품에 대한 설명이 들어갑니다.</p>
+              <a href="/products" className="text-brand-accent hover:underline">자세히 보기 →</a>
+            </div>
+            <div className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow">
+              <h3 className="text-2xl font-bold mb-4">제품 2</h3>
+              <p className="text-gray-600 mb-4">제품에 대한 설명이 들어갑니다.</p>
+              <a href="/products" className="text-brand-accent hover:underline">자세히 보기 →</a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section - 문의 */}
+      <section className="py-24 bg-brand-primary text-white">
+        <div className="max-w-[980px] mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold mb-4">문의하기</h2>
+          <p className="text-xl mb-8">궁금한 사항이 있으시면 언제든지 연락주세요</p>
           <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/contact"
+            className="inline-block px-8 py-3 bg-brand-accent text-white font-medium rounded-md hover:bg-brand-accent/90 transition-colors"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
+            문의하기
           </a>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+    </>
   );
 }
