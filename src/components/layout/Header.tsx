@@ -24,9 +24,9 @@ export default function Header() {
             <Link href="/board" className="text-white hover:text-brand-accent transition-colors">
               •••
             </Link>
-            <Link href="/contact" className="text-white hover:text-brand-accent transition-colors">
+            {/* <Link href="/contact" className="text-white hover:text-brand-accent transition-colors">
               •••
-            </Link>
+            </Link> */}
           </nav>
 
           {/* Actions */}
