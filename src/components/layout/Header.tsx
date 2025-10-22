@@ -12,7 +12,7 @@ export default function Header() {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/about" className="text-white hover:text-brand-accent transition-colors">
+            <Link href="/home" className="text-white hover:text-brand-accent transition-colors">
               Home
             </Link>
             <Link href="/products" className="text-white hover:text-brand-accent transition-colors">
