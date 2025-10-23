@@ -8,7 +8,8 @@ export default function WeChatFeatures() {
         {/* 기대효과 이미지 */}
         <div className="mb-12">
           <img
-            src="https://cdn.imweb.me/thumbnail/20250318/e2f7d01fc897b.jpg"
+            src="/images/wechat_features.jpg"
+            alt="기대효과"
             className="w-full h-auto rounded-lg shadow-lg"
           />
         </div>

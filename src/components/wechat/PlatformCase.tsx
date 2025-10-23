@@ -8,7 +8,7 @@ export default function PlatformCase() {
         {/* 플랫폼 사례 이미지 */}
         <div className="mb-12">
           <img
-            src="https://cdn.imweb.me/thumbnail/20250318/060fc1ad37576.jpg"
+            src="/images/wechat_case.jpg"
             alt="플랫폼 사례"
             className="w-full h-auto rounded-lg shadow-lg"
           />
