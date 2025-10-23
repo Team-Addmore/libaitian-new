@@ -16,8 +16,8 @@ export default function WeChatPage() {
       <WeChatHero />
       <WeChatMiniProgram />
       <WeChatFeatures />
-      <MarketingStrategy />
       <PlatformCase />
+      <MarketingStrategy />
       {/* <ContactForm /> */}
     </>
   );
