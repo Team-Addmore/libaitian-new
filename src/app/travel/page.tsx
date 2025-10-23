@@ -51,8 +51,15 @@ export default function TravelPage() {
               </span>
             </div>
           </div>
+        {/* 예약 버튼 */}
+          <div className="mt-8">
+            <button className="bg-black text-white px-6 py-2 rounded-full font-semibold text-base hover:bg-gray-800 transition">
+              예약하기
+            </button>
+          </div>
         </div>
       </section>
+
 
       {/* 두 번째 숙소 섹션 */}
       <section className="flex flex-col md:flex-row items-center max-w-6xl mx-auto my-16 gap-8 px-4">
@@ -96,6 +103,12 @@ export default function TravelPage() {
                 '나른하다'의 제주어인 '느랏'의 의미처럼 제주다운 편안함을 제공하는 느랏,김녕아치입니다.
               </span>
             </div>
+          </div>
+          {/* 예약 버튼 */}
+          <div className="mt-8">
+            <button className="bg-black text-white px-6 py-2 rounded-full font-semibold text-base hover:bg-gray-800 transition">
+              예약하기
+            </button>
           </div>
         </div>
       </section>
