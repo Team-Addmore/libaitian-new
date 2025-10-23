@@ -19,6 +19,7 @@ export default function LibaitianHomePage() {
       title: '중국 개별 여행객을 위한',
       titleLine2: '로컬 가이드 모집',
       subtitle: '"단순한 관광이 아닌, 진짜 로컬을 알려주는 로컬 가이드"',
+      titleColor: 'text-yellow-400',
       description: '여정의 조각을 리바이티엔의 인바운드 여행 플랫폼과 함께 특별한 경험을 만들어 갈 로컬 가이드를 모집합니다, 여행을 이야기로'
     }
   ];
@@ -77,21 +78,22 @@ export default function LibaitianHomePage() {
   return (
     <div className="min-h-screen bg-white font-['Pretendard']">
       {/* 섹션 1: 메인 슬라이드 */}
-      <section className="relative h-[80vh] w-full overflow-hidden">
+      <section className="relative h-[50vh] md:h-[48vh] w-full overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
-            className={`absolute inset-0 transition-opacity duration-700 ${
-              index === currentSlide ? 'opacity-100' : 'opacity-0'
+            className={`absolute inset-0 transition-all duration-1000 ease-in-out ${
+              index === currentSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
             }`}
           >
             {slide.type === 'image-only' ? (
-              // 첫 번째: 순수 이미지만 (모바일에서 전체 보이도록)
+              // 첫 번째: 순수 이미지만 (이미지 위치를 위로 조정)
               <div className="relative w-full h-full bg-[#0a2426]">
                 <img
                   src={slide.image}
                   alt={slide.alt}
                   className="w-full h-full object-contain md:object-cover"
+                  style={{ objectPosition: 'center 35%' }}
                 />
               </div>
             ) : (
@@ -104,7 +106,7 @@ export default function LibaitianHomePage() {
                 />
                 <div className="absolute inset-0 bg-black/40 flex items-center px-4 md:px-8 lg:px-16 xl:px-24">
                   <div className="text-left text-white max-w-4xl">
-                    <h2 className="text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight break-keep">
+                    <h2 className={`text-2xl md:text-4xl lg:text-5xl xl:text-6xl font-bold leading-tight break-keep ${slide.titleColor || 'text-white'}`}>
                       {slide.title}
                       <br />
                       {slide.titleLine2}
@@ -161,7 +163,7 @@ export default function LibaitianHomePage() {
           ))}
         </div>
       </section>
-
+      
       {/* 섹션 2: 3개 이미지 카드 */}
       <section className="py-20 md:py-32 px-4 bg-white">
         <div className="max-w-7xl mx-auto px-4">
@@ -208,6 +210,164 @@ export default function LibaitianHomePage() {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 섹션 2-1: 관광 프로그램 */}
+      <section className="py-20 md:py-32 px-4 bg-white font-pretendard">
+        <div className="max-w-7xl mx-auto">
+          {/* 투어 섹션 */}
+          <div className="mb-20 md:mb-32">
+            {/* 텍스트 영역 */}
+            <div className="mb-12 md:mb-16">
+              <div className="mb-8 md:mb-10">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#002427] mb-4 md:mb-6 break-keep">
+                  김녕의 자연을 경험하다
+                </h2>
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-700 leading-relaxed break-keep">
+                  푸른 김녕바다와 함께하는 특별한 투어 프로그램
+                </p>
+              </div>
+              
+              {/* 2x2 그리드 배열 */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-8 md:mb-10">
+                <div className="flex items-start gap-3 md:gap-4">
+                  <div className="w-2 h-2 bg-[#002427] rounded-full mt-2 md:mt-3 flex-shrink-0"></div>
+                  <div>
+                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#002427] mb-1 md:mb-2 break-keep">김녕바다</h3>
+                    <p className="text-base md:text-lg lg:text-xl text-gray-700 break-keep">에메랄드빛 투명한 바다에서의 힐링</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 md:gap-4">
+                  <div className="w-2 h-2 bg-[#002427] rounded-full mt-2 md:mt-3 flex-shrink-0"></div>
+                  <div>
+                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#002427] mb-1 md:mb-2 break-keep">로컬푸드</h3>
+                    <p className="text-base md:text-lg lg:text-xl text-gray-700 break-keep">신선한 제주 로컬 식재료로 만든 특별한 맛</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 md:gap-4">
+                  <div className="w-2 h-2 bg-[#002427] rounded-full mt-2 md:mt-3 flex-shrink-0"></div>
+                  <div>
+                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#002427] mb-1 md:mb-2 break-keep">김녕해안 지질트레일</h3>
+                    <p className="text-base md:text-lg lg:text-xl text-gray-700 break-keep">유네스코 세계지질공원의 아름다운 트레일</p>
+                  </div>
+                </div>
+                
+                <div className="flex items-start gap-3 md:gap-4">
+                  <div className="w-2 h-2 bg-[#002427] rounded-full mt-2 md:mt-3 flex-shrink-0"></div>
+                  <div>
+                    <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-[#002427] mb-1 md:mb-2 break-keep">요트투어</h3>
+                    <p className="text-base md:text-lg lg:text-xl text-gray-700 break-keep">바다 위에서 즐기는 프라이빗 요트 경험</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* 투어 더 알아보기 버튼 */}
+              <div>
+                <Link
+                  href="/travel"
+                  className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 bg-[#002427] text-white text-base md:text-lg lg:text-xl font-semibold rounded-full hover:bg-[#003d42] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  <span>투어 더 알아보기</span>
+                  <svg
+                    className="w-5 h-5 md:w-6 md:h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </Link>
+              </div>
+            </div>
+
+            {/* 영상 영역 - 여백 완전 제거 */}
+            <div className="relative w-full rounded-xl overflow-hidden shadow-2xl bg-black" style={{ paddingTop: '56.25%' }}>
+              <iframe
+                src="https://www.youtube.com/embed/aTfovFfuFuE?autoplay=1&mute=1&loop=1&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&playlist=aTfovFfuFuE&disablekb=1&fs=0&iv_load_policy=3"
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+                style={{ 
+                  width: '180%',
+                  height: '180%',
+                  border: 'none',
+                  pointerEvents: 'none'
+                }}
+                frameBorder="0"
+                allow="autoplay; encrypted-media"
+                title="김녕 투어 영상"
+              />
+            </div>
+          </div>
+
+          {/* 스테이 섹션 */}
+          <div className="bg-gray-50 -mx-4 px-4 py-16 md:py-20 lg:py-32 rounded-xl md:rounded-2xl">
+            <div className="max-w-7xl mx-auto">
+              <div className="text-center mb-12 md:mb-16">
+                <h2 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-[#002427] mb-4 md:mb-6 break-keep">
+                  나른하고 포근한 숙소
+                </h2>
+                <p className="text-lg md:text-xl lg:text-2xl text-gray-700 break-keep">
+                  김녕에서의 편안한 휴식, 당신만의 특별한 공간
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 lg:gap-8 mb-12 md:mb-16">
+                {/* 숙소 이미지 1 - 클릭 가능 */}
+                <Link href="/travel" className="block">
+                  <div className="relative group overflow-hidden rounded-xl shadow-lg aspect-[4/3] cursor-pointer">
+                    <img
+                      src="/images/stay-1.jpg"
+                      alt="김녕 숙소 외관"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                </Link>
+
+                {/* 숙소 이미지 2 - 클릭 가능 */}
+                <Link href="/travel" className="block">
+                  <div className="relative group overflow-hidden rounded-xl shadow-lg aspect-[4/3] cursor-pointer">
+                    <img
+                      src="/images/stay-2.jpg"
+                      alt="김녕 숙소 내부"
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
+                </Link>
+              </div>
+
+              {/* 더 알아보기 버튼 */}
+              <div className="text-center">
+                <Link
+                  href="/travel"
+                  className="inline-flex items-center gap-2 md:gap-3 px-6 md:px-10 py-3 md:py-5 bg-[#002427] text-white text-base md:text-lg lg:text-xl font-semibold rounded-full hover:bg-[#003d42] transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
+                >
+                  <span>숙소 더 알아보기</span>
+                  <svg
+                    className="w-5 h-5 md:w-6 md:h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M17 8l4 4m0 0l-4 4m4-4H3"
+                    />
+                  </svg>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
