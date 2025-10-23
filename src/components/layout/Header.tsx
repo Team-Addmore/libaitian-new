@@ -18,7 +18,7 @@ export default function Header() {
             <Link href="/travel" className="text-white hover:text-brand-accent transition-colors">
               Libaitian-Trevel
             </Link>
-            <Link href="/shop" className="text-white hover:text-brand-accent transition-colors">
+            <Link href="/wechat" className="text-white hover:text-brand-accent transition-colors">
               Libaitian-Wechat
             </Link>
             <Link href="/board" className="text-white hover:text-brand-accent transition-colors">
