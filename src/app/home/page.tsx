@@ -78,7 +78,7 @@ export default function LibaitianHomePage() {
   return (
     <div className="min-h-screen bg-white font-['Pretendard']">
       {/* 섹션 1: 메인 슬라이드 */}
-      <section className="relative h-[50vh] md:h-[48vh] w-full overflow-hidden">
+      <section className="relative h-[70vh] md:h-screen w-full overflow-hidden">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -92,8 +92,8 @@ export default function LibaitianHomePage() {
                 <img
                   src={slide.image}
                   alt={slide.alt}
-                  className="w-full h-full object-contain md:object-cover"
-                  style={{ objectPosition: 'center 35%' }}
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: 'center center' }}
                 />
               </div>
             ) : (
