@@ -20,7 +20,7 @@ export default function Header() {
 
           {/* Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/about" className="text-white hover:text-[#ffae00] transition-colors">
+            <Link href="/home" className="text-white hover:text-[#ffae00] transition-colors">
               Home
             </Link>
             <Link href="/travel" className="text-white hover:text-[#ffae00] transition-colors">

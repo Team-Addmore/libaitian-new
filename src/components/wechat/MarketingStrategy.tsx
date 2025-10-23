@@ -7,7 +7,8 @@ export default function MarketingStrategy() {
         {/* 마케팅 전략 이미지 */}
         <div className="mb-12">
           <img
-            src="https://cdn.imweb.me/thumbnail/20250318/91db854ef2dd9.jpg"
+            src="/images/wechat_strategy.jpg"
+            alt="마케팅전략"
             className="w-full h-auto rounded-lg shadow-lg"
           />
         </div>

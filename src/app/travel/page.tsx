@@ -13,7 +13,7 @@ export default function TravelPage() {
         {/* 왼쪽 이미지 */}
         <div className="w-full md:w-1/2">
           <img
-            src="https://cdn.imweb.me/thumbnail/20240719/7ff017ad5d192.jpg"
+            src="/images/stay-1.jpg"
             alt="숙소 사진"
             className="w-full h-auto rounded-lg shadow-lg"
           />
@@ -66,7 +66,7 @@ export default function TravelPage() {
         {/* 왼쪽 이미지 */}
         <div className="w-full md:w-1/2">
           <img
-            src="https://cdn.imweb.me/thumbnail/20250319/9642f622d7ec0.jpg"
+            src="/images/stay-2.jpg"
             alt="숙소 사진"
             className="w-full h-auto rounded-lg shadow-lg"
           />
