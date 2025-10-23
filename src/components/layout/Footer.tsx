@@ -1,13 +1,23 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-900 text-gray-300">
+    <footer className="bg-[#0a2f21] text-gray-300">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <h3 className="text-white text-lg font-bold mb-4">LIBAITIAN</h3>
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="https://cdn.imweb.me/thumbnail/20250903/28cfbff63b4be.png"
+                alt="LIBAITIAN Logo"
+                width={40}
+                height={40}
+                className="object-contain"
+              />
+              <h3 className="text-white text-lg font-bold">리바이티엔 - LIBAITIAN</h3>
+            </div>
             <p className="text-sm mb-2">주식회사 리바이티엔</p>
             <p className="text-sm">대한민국의 혁신을 이끌어갑니다.</p>
           </div>
@@ -67,7 +77,7 @@ export default function Footer() {
           </div>
         </div>
 
-        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-sm">
+        <div className="border-t border-[#0f3f2e] mt-8 pt-8 text-center text-sm">
           <p>&copy; {new Date().getFullYear()} LIBAITIAN. All rights reserved.</p>
         </div>
       </div>
