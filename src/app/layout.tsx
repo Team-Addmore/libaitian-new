@@ -8,8 +8,20 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "LIBAITIAN - 리바이티엔",
-  description: "대한민국의 혁신을 이끌어가는 리바이티엔입니다.",
+  title: 'LIBAITIAN',
+  description: '여정의 조각을 감정으로, 여행을 이야기로',
+  icons: {
+    icon: [
+      {
+        url: '/favicon-dark.png',
+        media: '(prefers-color-scheme: light)',
+      },
+      {
+        url: '/favicon-light.png',
+        media: '(prefers-color-scheme: dark)',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

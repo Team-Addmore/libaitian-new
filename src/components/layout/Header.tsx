@@ -8,13 +8,16 @@ export default function Header() {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
-            <Image
-              src="https://cdn.imweb.me/thumbnail/20250903/28cfbff63b4be.png"
-              alt="LIBAITIAN Logo"
-              width={50}
-              height={50}
-              className="object-contain"
-            />
+            <div className="relative w-[50px] h-[50px]">
+              <Image
+                src="/images/28cfbff63b4be.png"
+                alt="LIBAITIAN Logo"
+                fill
+                sizes="50px"
+                className="object-contain"
+                priority
+              />
+            </div>
             <span className="text-2xl font-bold text-white">LIBAITIAN</span>
           </Link>
 

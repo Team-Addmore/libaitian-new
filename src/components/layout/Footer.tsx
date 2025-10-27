@@ -5,17 +5,19 @@ export default function Footer() {
   return (
     <footer className="bg-[#0a2f21] text-gray-300">
       <div className="container mx-auto px-4 py-12">
-        {/* Top Section - Logo and Links */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-8">
           {/* Logo */}
           <div className="flex items-center gap-3 mb-6 md:mb-0">
-            <Image
-              src="https://cdn.imweb.me/thumbnail/20250903/28cfbff63b4be.png"
-              alt="LIBAITIAN Logo"
-              width={40}
-              height={40}
-              className="object-contain"
-            />
+            {/* 컨테이너로 감싸기 */}
+            <div className="relative w-[40px] h-[40px]">
+              <Image
+                src="/images/28cfbff63b4be.png"
+                alt="LIBAITIAN Logo"
+                fill
+                sizes="40px"
+                className="object-contain"
+              />
+            </div>
             <h3 className="text-white text-lg font-bold">LIBAITIAN CO., LTD.</h3>
           </div>
 

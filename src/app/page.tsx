@@ -1,19 +1,48 @@
+"use client";
+
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Image from "next/image";
+
 export default function Home() {
+  const router = useRouter();
+
+  // 3초 후 자동 이동
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      router.push("/home");
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [router]);
+
+  // 클릭 시 즉시 이동
+  const handleClick = () => {
+    router.push("/home");
+  };
+
   return (
-    <>
-      {/* Hero Section - 메인 비주얼 */}
-      <section className="relative bg-black text-white" style={{ height: '792px' }}>
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <div className="text-center max-w-4xl px-4">
-            <h1 className="text-5xl md:text-7xl font-bold mb-6">
-              LIBAITIAN
-            </h1>
-            <p className="text-xl md:text-2xl mb-8">
-              대한민국의 혁신을 이끌어가는 리바이티엔입니다
-            </p>
-          </div>
-        </div>
-      </section>
-    </>
+    <section 
+      className="relative bg-black cursor-pointer" 
+      style={{ height: '100vh' }}
+      onClick={handleClick}
+    >
+      {/* 배경 이미지 */}
+      <Image
+        src="/images/s1-main.png"
+        alt="LIBAITIAN"
+        fill
+        priority
+        className="object-cover"
+        quality={100}
+      />
+      
+      {/* 하단 힌트 */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2">
+        <p className="text-white text-sm animate-pulse">
+          화면을 터치하세요
+        </p>
+      </div>
+    </section>
   );
 }
