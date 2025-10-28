@@ -10,7 +10,7 @@ export default function LibaitianHomePage() {
   const slides = [
     {
       type: 'image-only',
-      image: '/images/s1-main.png',
+      image: '/images/s1-main-mobile.png',
       alt: 'LIBAITIAN 메인 이미지'
     },
     {
@@ -78,7 +78,7 @@ export default function LibaitianHomePage() {
   return (
     <div className="min-h-screen bg-white font-['Pretendard']">
       {/* 섹션 1: 메인 슬라이드 */}
-      <section className="relative h-[70vh] md:h-screen w-full overflow-hidden">
+      <section className="relative h-[80vh] w-full overflow-hidden bg-black">
         {slides.map((slide, index) => (
           <div
             key={index}
@@ -92,8 +92,9 @@ export default function LibaitianHomePage() {
                 <img
                   src={slide.image}
                   alt={slide.alt}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain"
                   style={{ objectPosition: 'center center' }}
+                  suppressHydrationWarning
                 />
               </div>
             ) : (
@@ -135,17 +136,21 @@ export default function LibaitianHomePage() {
         {/* 슬라이드 버튼 */}
         <button
           onClick={prevSlide}
-          className="absolute left-2 md:left-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-full transition z-10"
+          className="absolute left-4 top-[75%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all flex items-center justify-center text-white"
+          aria-label="이전 슬라이드"
         >
-          <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
+
+        {/* 다음 버튼 */}
         <button
           onClick={nextSlide}
-          className="absolute right-2 md:right-8 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 backdrop-blur-sm p-2 md:p-3 rounded-full transition z-10"
+          className="absolute right-4 top-[75%] -translate-y-1/2 z-20 w-12 h-12 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all flex items-center justify-center text-white"
+          aria-label="다음 슬라이드"
         >
-          <svg className="w-6 h-6 md:w-8 md:h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
           </svg>
         </button>
