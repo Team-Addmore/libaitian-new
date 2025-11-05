@@ -1,8 +1,9 @@
-import { google } from 'googleapis';
+import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import { NextResponse } from 'next/server';
 
 export async function POST(request: Request) {
   try {
+    // 환경 변수 로드
     const propertyId = process.env.JACOB_GA_PROPERTY_ID;
     const serviceAccountEmail = process.env.JACOB_GA_SERVICE_ACCOUNT_EMAIL;
     const privateKey = process.env.JACOB_GA_PRIVATE_KEY;
@@ -12,22 +13,15 @@ export async function POST(request: Request) {
     console.log('Property ID:', propertyId);
     console.log('Service Account:', serviceAccountEmail);
     console.log('Private Key exists:', !!privateKey);
-    console.log('Private Key length:', privateKey?.length);
     console.log('=====================');
     
     // 환경 변수 검증
-    if (!propertyId) {
-      return NextResponse.json(
-        { error: 'JACOB_GA_PROPERTY_ID가 설정되지 않았습니다' },
-        { status: 500 }
-      );
-    }
-    
-    if (!serviceAccountEmail || !privateKey) {
+    if (!propertyId || !serviceAccountEmail || !privateKey) {
       return NextResponse.json(
         { 
-          error: '서비스 계정 인증 정보가 설정되지 않았습니다',
+          error: '환경 변수가 설정되지 않았습니다',
           debug: {
+            hasPropertyId: !!propertyId,
             hasEmail: !!serviceAccountEmail,
             hasKey: !!privateKey,
           }
@@ -38,37 +32,51 @@ export async function POST(request: Request) {
 
     // 요청 본문 파싱
     const body = await request.json();
-    const { startDate = '7daysAgo', endDate = 'today' } = body;
+    const { 
+      startDate = '7daysAgo', 
+      endDate = 'today',
+      dimensions,
+      metrics,
+      orderBys,
+      limit
+    } = body;
 
-    // JWT 인증 설정
-    const auth = new google.auth.JWT({
-      email: serviceAccountEmail,
-      key: privateKey.replace(/\\n/g, '\n'),
-      scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
-    });
-
-    // GA4 Data API 클라이언트 생성
-    const analyticsdata = google.analyticsdata('v1beta');
-
-    // 데이터 요청
-    const response = await analyticsdata.properties.runReport({
-      auth: auth,
-      property: `properties/${propertyId}`,
-      requestBody: {
-        dateRanges: [{ startDate, endDate }],
-        dimensions: [{ name: 'date' }],
-        metrics: [
-          { name: 'activeUsers' },
-          { name: 'sessions' },
-          { name: 'screenPageViews' }
-        ],
-        orderBys: [{ dimension: { dimensionName: 'date' }, desc: false }],
+    // Analytics Data Client 생성
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+      credentials: {
+        client_email: serviceAccountEmail,
+        private_key: privateKey.replace(/\\n/g, '\n'),
       },
     });
 
+    // 리포트 요청 설정
+    const requestBody: any = {
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate, endDate }],
+      dimensions: dimensions || [{ name: 'date' }],
+      metrics: metrics || [
+        { name: 'activeUsers' },
+        { name: 'sessions' },
+        { name: 'screenPageViews' }
+      ],
+    };
+
+    if (orderBys) {
+      requestBody.orderBys = orderBys;
+    } else {
+      // 기본 정렬: 날짜 오름차순
+      requestBody.orderBys = [{ dimension: { dimensionName: 'date' }, desc: false }];
+    }
+
+    if (limit) {
+      requestBody.limit = limit;
+    }
+
+    // 데이터 요청
+    const [response] = await analyticsDataClient.runReport(requestBody);
+
     console.log('API Response Success!');
-    
-    return NextResponse.json(response.data);
+    return NextResponse.json(response);
     
   } catch (error: any) {
     console.error('Analytics API Error:', error);
@@ -76,7 +84,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       { 
         error: error.message || '알 수 없는 오류가 발생했습니다',
-        details: error.response?.data || error.toString()
+        details: error.toString()
       },
       { status: 500 }
     );
@@ -94,6 +102,7 @@ export async function GET() {
     console.log('Property ID:', propertyId);
     console.log('Service Account:', serviceAccountEmail);
     console.log('Private Key exists:', !!privateKey);
+    console.log('===============');
     
     if (!propertyId || !serviceAccountEmail || !privateKey) {
       return NextResponse.json(
@@ -109,30 +118,27 @@ export async function GET() {
       );
     }
 
-    const auth = new google.auth.JWT({
-      email: serviceAccountEmail,
-      key: privateKey.replace(/\\n/g, '\n'),
-      scopes: ['https://www.googleapis.com/auth/analytics.readonly'],
-    });
-
-    const analyticsdata = google.analyticsdata('v1beta');
-
-    const response = await analyticsdata.properties.runReport({
-      auth: auth,
-      property: `properties/${propertyId}`,
-      requestBody: {
-        dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
-        dimensions: [{ name: 'date' }],
-        metrics: [
-          { name: 'activeUsers' },
-          { name: 'sessions' },
-          { name: 'screenPageViews' }
-        ],
-        orderBys: [{ dimension: { dimensionName: 'date' }, desc: false }],
+    const analyticsDataClient = new BetaAnalyticsDataClient({
+      credentials: {
+        client_email: serviceAccountEmail,
+        private_key: privateKey.replace(/\\n/g, '\n'),
       },
     });
 
-    return NextResponse.json(response.data);
+    const [response] = await analyticsDataClient.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: '7daysAgo', endDate: 'today' }],
+      dimensions: [{ name: 'date' }],
+      metrics: [
+        { name: 'activeUsers' },
+        { name: 'sessions' },
+        { name: 'screenPageViews' }
+      ],
+      orderBys: [{ dimension: { dimensionName: 'date' }, desc: false }],
+    });
+
+    console.log('GET Response Success!');
+    return NextResponse.json(response);
     
   } catch (error: any) {
     console.error('Analytics API Error:', error);
