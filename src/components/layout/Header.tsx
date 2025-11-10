@@ -44,12 +44,6 @@ export default function Header() {
             <Link href="/jiwon" className="text-white hover:text-[#ffae00] transition-colors">
               GA-Jiwon
             </Link>
-            <Link href="/hyun" className="text-white hover:text-[#ffae00] transition-colors">
-              GA-Hyun
-            </Link>
-            <Link href="/jade" className="text-white hover:text-[#ffae00] transition-colors">
-              GA-Jade min
-            </Link>
           </nav>
 
           {/* Desktop Actions */}
@@ -146,20 +140,6 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 GA-Jiwon
-              </Link>
-              <Link
-                href="/hyun"
-                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                GA-Hyun
-              </Link>
-              <Link
-                href="/jade"
-                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                GA-Jade min
               </Link>
               
               {/* Mobile Actions */}
