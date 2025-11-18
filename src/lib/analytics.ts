@@ -2,15 +2,20 @@
  * Google Analytics 측정 함수들
  */
 
+// GTM 이벤트 설정 타입 정의
+interface GtagConfig {
+  [key: string]: string | number | boolean | undefined;
+}
+
 // GTM 타입 정의
 declare global {
   interface Window {
     gtag: (
       command: string,
       targetId: string | Date,
-      config?: Record<string, any>
+      config?: GtagConfig
     ) => void;
-    dataLayer: any[];
+    dataLayer: unknown[];
   }
 }
 
@@ -61,7 +66,7 @@ export const trackButtonClick = (buttonName: string, section?: string) => {
 // 커스텀 이벤트 추적 (나중에 추가용)
 export const trackEvent = (
   eventName: string,
-  eventParams?: Record<string, any>
+  eventParams?: GtagConfig
 ) => {
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, eventParams);
