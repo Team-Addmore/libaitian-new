@@ -9,6 +9,14 @@ interface AnalyticsRow {
   pageViews: number;
 }
 
+// Google Analytics API 응답 타입 정의
+interface AnalyticsResponse {
+  rows?: Array<{
+    dimensionValues: Array<{ value: string }>;
+    metricValues: Array<{ value: string }>;
+  }>;
+}
+
 export default function JacobPage() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,17 +49,18 @@ export default function JacobPage() {
       const data = await response.json();
       const parsedData = parseAnalyticsResponse(data);
       setAnalyticsData(parsedData);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : '알 수 없는 오류가 발생했습니다';
+      setError(errorMessage);
       console.error('Error:', err);
     } finally {
       setIsLoading(false);
     }
   };
 
-  const parseAnalyticsResponse = (result: any): AnalyticsRow[] => {
+  const parseAnalyticsResponse = (result: AnalyticsResponse): AnalyticsRow[] => {
     if (!result.rows) return [];
-    return result.rows.map((row: any) => ({
+    return result.rows.map((row) => ({
       date: formatDate(row.dimensionValues[0].value),
       activeUsers: parseInt(row.metricValues[0].value),
       sessions: parseInt(row.metricValues[1].value),

@@ -1,6 +1,19 @@
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
 import { NextResponse } from 'next/server';
 
+interface ReportRequest {
+  property: string;
+  dateRanges: Array<{ startDate: string; endDate: string }>;
+  dimensions: Array<{ name: string }>;
+  metrics: Array<{ name: string }>;
+  orderBys?: Array<{
+    dimension?: { dimensionName: string };
+    metric?: { metricName: string };
+    desc?: boolean;
+  }>;
+  limit?: number;
+}
+
 export async function POST(request: Request) {
   try {
     // 환경 변수 로드
@@ -50,7 +63,7 @@ export async function POST(request: Request) {
     });
 
     // 리포트 요청 설정
-    const requestBody: any = {
+    const requestBody: ReportRequest = {
       property: `properties/${propertyId}`,
       dateRanges: [{ startDate, endDate }],
       dimensions: dimensions || [{ name: 'date' }],
@@ -78,13 +91,16 @@ export async function POST(request: Request) {
     console.log('API Response Success!');
     return NextResponse.json(response);
     
-  } catch (error: any) {
+  } catch (error) {
     console.error('Analytics API Error:', error);
     
+    const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다';
+    const errorDetails = error instanceof Error ? error.toString() : String(error);
+
     return NextResponse.json(
       { 
-        error: error.message || '알 수 없는 오류가 발생했습니다',
-        details: error.toString()
+        error: errorMessage || '알 수 없는 오류가 발생했습니다',
+        details: errorDetails
       },
       { status: 500 }
     );
@@ -140,10 +156,11 @@ export async function GET() {
     console.log('GET Response Success!');
     return NextResponse.json(response);
     
-  } catch (error: any) {
+  } catch (error) {
     console.error('Analytics API Error:', error);
+    const errorMessage = error instanceof Error ? error.message : '알 수 없는 오류';
     return NextResponse.json(
-      { error: error.message || '알 수 없는 오류' },
+      { error: errorMessage },
       { status: 500 }
     );
   }

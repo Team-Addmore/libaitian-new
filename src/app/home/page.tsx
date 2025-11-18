@@ -185,8 +185,8 @@ export default function LibaitianHomePage() {
           </div>
 
           <div className="text-lg md:text-xl lg:text-2xl text-gray-700 text-center max-w-6xl mx-auto mb-20 leading-relaxed space-y-3">
-            <p className="break-keep">여행을 단순한 방문이 아니라, '지속가능한 여행' 감정이 남는 '기억' 가능한 하루로 바꾸고자 합니다.</p>
-            <p className="break-keep">감정 중심의 지속 가능한 여행 경험을 통해, 여행자가 지역과 깊이 연결되는 것을 목표로 합니다.</p>
+            <p className="break-keep">{`여행을 단순한 방문이 아니라, '지속가능한 여행' 감정이 남는 '기억' 가능한 하루로 바꾸고자 합니다.`}</p>
+            <p className="break-keep">{`감정 중심의 지속 가능한 여행 경험을 통해, 여행자가 지역과 깊이 연결되는 것을 목표로 합니다.`}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
