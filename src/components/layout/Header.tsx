@@ -38,8 +38,11 @@ export default function Header() {
             <Link href="/wechat" className="text-white hover:text-[#ffae00] transition-colors">
               Libaitian-Wechat
             </Link>
-            <Link href="/board" className="text-white hover:text-[#ffae00] transition-colors">
-              •••
+            <Link href="/jacob" className="text-white hover:text-[#ffae00] transition-colors">
+              GA-Jacob
+            </Link>
+            <Link href="/jiwon" className="text-white hover:text-[#ffae00] transition-colors">
+              GA-Jiwon
             </Link>
           </nav>
 
@@ -125,11 +128,18 @@ export default function Header() {
                 Libaitian-Wechat
               </Link>
               <Link
-                href="/board"
+                href="/jacob"
                 className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                •••
+                GA-Jacob
+              </Link>
+              <Link
+                href="/jiwon"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                GA-Jiwon
               </Link>
               
               {/* Mobile Actions */}
