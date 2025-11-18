@@ -47,7 +47,7 @@ export default function TravelPage() {
             <div className="flex items-center gap-10">
               <FaBook className="text-gray-500 w-5 h-5" />
               <span>
-                '나른하다'의 제주어인 '느랏'의 의미처럼 제주다운 편안함을 제공하는 느랏,청굴물입니다.
+                {`'나른하다'의 제주어인 '느랏'의 의미처럼 제주다운 편안함을 제공하는 느랏,청굴물입니다.`}
               </span>
             </div>
           </div>
@@ -100,7 +100,7 @@ export default function TravelPage() {
             <div className="flex items-center gap-10">
               <FaBook className="text-gray-500 w-5 h-5" />
               <span>
-                '나른하다'의 제주어인 '느랏'의 의미처럼 제주다운 편안함을 제공하는 느랏,김녕아치입니다.
+                {`'나른하다'의 제주어인 '느랏'의 의미처럼 제주다운 편안함을 제공하는 느랏,김녕아치입니다.`}
               </span>
             </div>
           </div>
