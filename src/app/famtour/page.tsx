@@ -21,14 +21,14 @@ export default function FamTourPage() {
   // 슬라이드 현재 인덱스
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // 일정 이미지 슬라이드 (나중에 실제 이미지 경로로 교체)
+  // 일정 이미지 슬라이드
   const scheduleImages = [
-    '/schedule-1.jpg',
-    '/schedule-2.jpg',
-    '/schedule-3.jpg',
-    '/schedule-4.jpg',
-    '/schedule-5.jpg',
-    '/schedule-6.jpg',
+    '/images/schedule-1.webp',
+    '/images/schedule-2.webp',
+    '/images/schedule-3.webp',
+    '/images/schedule-4.webp',
+    '/images/schedule-5.webp',
+    '/images/schedule-6.webp',
   ];
 
   // 페이지 진입 시 측정
@@ -475,9 +475,9 @@ export default function FamTourPage() {
                   onClick={() => trackImageClick(`schedule_image_${index + 1}`, 'gallery')}
                 >
                   {/* 여기에 실제 이미지 넣기 */}
-                  {/* <Image src={image} alt={`일정 ${index + 1}`} fill className="object-cover" /> */}
+                  <Image src={image} alt={`일정 ${index + 1}`} fill className="object-cover" />
                   
-                  {/* 임시 배경 (실제 이미지로 교체) */}
+                  임시 배경 (실제 이미지로 교체)
                   <div
                     className="w-full h-full flex items-center justify-center cursor-pointer"
                     style={{
