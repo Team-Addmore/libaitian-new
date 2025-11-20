@@ -9,22 +9,39 @@ interface AnalyticsRow {
   pageViews: number;
 }
 
-// Google Analytics API 응답 타입 정의
+interface CountryRow {
+  country: string;
+  activeUsers: number;
+  sessions: number;
+}
+
+interface DimensionValue {
+  value: string;
+}
+
+interface MetricValue {
+  value: string;
+}
+
+interface AnalyticsResponseRow {
+  dimensionValues: DimensionValue[];
+  metricValues: MetricValue[];
+}
+
 interface AnalyticsResponse {
-  rows?: Array<{
-    dimensionValues: Array<{ value: string }>;
-    metricValues: Array<{ value: string }>;
-  }>;
+  rows?: AnalyticsResponseRow[];
 }
 
 export default function JacobPage() {
   const [analyticsData, setAnalyticsData] = useState<AnalyticsRow[]>([]);
+  const [countryData, setCountryData] = useState<CountryRow[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     // 페이지 로드 시 자동으로 데이터 가져오기
     fetchAnalyticsData();
+    fetchCountryData();
   }, []);
 
   const fetchAnalyticsData = async () => {
@@ -38,6 +55,7 @@ export default function JacobPage() {
         body: JSON.stringify({
           startDate: '7daysAgo',
           endDate: 'today',
+          reportType: 'daily',
         }),
       });
 
@@ -46,7 +64,7 @@ export default function JacobPage() {
         throw new Error(errorData.error || '데이터 가져오기 실패');
       }
 
-      const data = await response.json();
+      const data: AnalyticsResponse = await response.json();
       const parsedData = parseAnalyticsResponse(data);
       setAnalyticsData(parsedData);
     } catch (err) {
@@ -58,6 +76,30 @@ export default function JacobPage() {
     }
   };
 
+  const fetchCountryData = async () => {
+    try {
+      const response = await fetch('/api/jacob', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          startDate: '7daysAgo',
+          endDate: 'today',
+          reportType: 'country',
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('국가별 데이터 가져오기 실패');
+      }
+
+      const data: AnalyticsResponse = await response.json();
+      const parsedData = parseCountryResponse(data);
+      setCountryData(parsedData);
+    } catch (err) {
+      console.error('Country data error:', err);
+    }
+  };
+
   const parseAnalyticsResponse = (result: AnalyticsResponse): AnalyticsRow[] => {
     if (!result.rows) return [];
     return result.rows.map((row) => ({
@@ -65,6 +107,15 @@ export default function JacobPage() {
       activeUsers: parseInt(row.metricValues[0].value),
       sessions: parseInt(row.metricValues[1].value),
       pageViews: parseInt(row.metricValues[2].value),
+    }));
+  };
+
+  const parseCountryResponse = (result: AnalyticsResponse): CountryRow[] => {
+    if (!result.rows) return [];
+    return result.rows.map((row) => ({
+      country: row.dimensionValues[0].value,
+      activeUsers: parseInt(row.metricValues[0].value),
+      sessions: parseInt(row.metricValues[1].value),
     }));
   };
 
@@ -80,6 +131,11 @@ export default function JacobPage() {
     totalSessions: analyticsData.reduce((sum, row) => sum + row.sessions, 0),
     totalPageViews: analyticsData.reduce((sum, row) => sum + row.pageViews, 0),
   });
+
+  const handleRefresh = () => {
+    fetchAnalyticsData();
+    fetchCountryData();
+  };
 
   if (isLoading && analyticsData.length === 0) {
     return (
@@ -108,7 +164,7 @@ export default function JacobPage() {
 
       <div style={{ marginBottom: '30px' }}>
         <button
-          onClick={fetchAnalyticsData}
+          onClick={handleRefresh}
           disabled={isLoading}
           style={{
             padding: '12px 24px',
@@ -126,6 +182,7 @@ export default function JacobPage() {
 
       {analyticsData.length > 0 && (
         <>
+          {/* 요약 카드 */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(3, 1fr)',
@@ -173,6 +230,52 @@ export default function JacobPage() {
             </div>
           </div>
 
+          {/* 국가별 데이터 */}
+          {countryData.length > 0 && (
+            <div style={{ marginBottom: '30px' }}>
+              <h2 style={{ fontSize: '20px', marginBottom: '15px' }}>국가별 방문자 (상위 10개)</h2>
+              <div style={{
+                background: 'white',
+                borderRadius: '8px',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+                overflow: 'hidden',
+              }}>
+                <table style={{
+                  width: '100%',
+                  borderCollapse: 'collapse',
+                }}>
+                  <thead>
+                    <tr style={{ backgroundColor: '#f8f9fa' }}>
+                      <th style={{ padding: '16px', textAlign: 'left', fontWeight: '600' }}>
+                        국가
+                      </th>
+                      <th style={{ padding: '16px', textAlign: 'right', fontWeight: '600' }}>
+                        활성 사용자
+                      </th>
+                      <th style={{ padding: '16px', textAlign: 'right', fontWeight: '600' }}>
+                        세션
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {countryData.map((row, index) => (
+                      <tr key={index} style={{ borderTop: '1px solid #e0e0e0' }}>
+                        <td style={{ padding: '16px' }}>{row.country}</td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          {row.activeUsers.toLocaleString()}
+                        </td>
+                        <td style={{ padding: '16px', textAlign: 'right' }}>
+                          {row.sessions.toLocaleString()}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {/* 일별 데이터 */}
           <h2 style={{ fontSize: '20px', marginBottom: '15px' }}>최근 7일 데이터</h2>
           <table style={{
             width: '100%',
