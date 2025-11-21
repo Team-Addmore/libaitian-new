@@ -41,11 +41,8 @@ export default function Header() {
             <Link href="/famtour" className="text-white hover:text-[#ffae00] transition-colors">
               Libaitian-Famtour
             </Link>
-            <Link href="/jacob" className="text-white hover:text-[#ffae00] transition-colors">
-              GA-Jacob
-            </Link>
-            <Link href="/jiwon" className="text-white hover:text-[#ffae00] transition-colors">
-              GA-Jiwon
+            <Link href="/insights" className="text-white hover:text-[#ffae00] transition-colors">
+              Visitor Insights
             </Link>
           </nav>
 

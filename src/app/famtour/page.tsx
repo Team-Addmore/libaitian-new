@@ -25,12 +25,12 @@ export default function FamTourPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const scheduleImages = [
-    '/images/schedule-1.webp',
-    '/images/schedule-2.webp',
-    '/images/schedule-3.webp',
-    '/images/schedule-4.webp',
-    '/images/schedule-5.webp',
-    '/images/schedule-6.webp',
+    '/images/schedule_1.webp',
+    '/images/schedule_2.webp',
+    '/images/schedule_3.webp',
+    '/images/schedule_4.webp',
+    '/images/schedule_5.webp',
+    '/images/schedule_6.webp',
   ];
 
   // 페이지 진입 시 측정
@@ -440,7 +440,7 @@ export default function FamTourPage() {
           {/* 슬라이더 */}
           <div className="relative">
             {/* 슬라이드 이미지 */}
-            <div className="relative h-[300px] md:h-[500px] lg:h-[600px] overflow-hidden rounded-xl shadow-2xl">
+            <div className="relative aspect-[3/4] md:aspect-[2/3] max-w-[360px] md:max-w-[420px] lg:max-w-[460px] max-h-[560px] mx-auto overflow-hidden rounded-xl shadow-2xl bg-black">
               {scheduleImages.map((image, index) => (
                 <div
                   key={index}
@@ -449,7 +449,7 @@ export default function FamTourPage() {
                   }`}
                   onClick={() => trackImageClick(`schedule_image_${index + 1}`, 'gallery')}
                 >
-                  <Image src={image} alt={`일정 ${index + 1}`} fill className="object-cover cursor-pointer" />
+                  <Image src={image} alt={`일정 ${index + 1}`} fill className="object-contain cursor-pointer" />
                 </div>
               ))}
             </div>
