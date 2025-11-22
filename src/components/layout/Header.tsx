@@ -38,11 +38,11 @@ export default function Header() {
             <Link href="/wechat" className="text-white hover:text-[#ffae00] transition-colors">
               Libaitian-Wechat
             </Link>
-            <Link href="/jacob" className="text-white hover:text-[#ffae00] transition-colors">
-              GA-Jacob
+            <Link href="/famtour" className="text-white hover:text-[#ffae00] transition-colors">
+              Libaitian-Famtour
             </Link>
-            <Link href="/jiwon" className="text-white hover:text-[#ffae00] transition-colors">
-              GA-Jiwon
+            <Link href="/insights" className="text-white hover:text-[#ffae00] transition-colors">
+              Visitor Insights
             </Link>
           </nav>
 
@@ -126,6 +126,13 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Libaitian-Wechat
+              </Link>
+              <Link
+                href="/famtour"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Libaitian-Famtour
               </Link>
               <Link
                 href="/jacob"

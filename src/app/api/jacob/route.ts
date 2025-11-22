@@ -21,13 +21,6 @@ export async function POST(request: Request) {
     const serviceAccountEmail = process.env.JACOB_GA_SERVICE_ACCOUNT_EMAIL;
     const privateKey = process.env.JACOB_GA_PRIVATE_KEY;
     
-    // 디버깅 로그
-    console.log('=== API Route Debug ===');
-    console.log('Property ID:', propertyId);
-    console.log('Service Account:', serviceAccountEmail);
-    console.log('Private Key exists:', !!privateKey);
-    console.log('=====================');
-    
     // 환경 변수 검증
     if (!propertyId || !serviceAccountEmail || !privateKey) {
       return NextResponse.json(
@@ -48,10 +41,7 @@ export async function POST(request: Request) {
     const { 
       startDate = '7daysAgo', 
       endDate = 'today',
-      dimensions,
-      metrics,
-      orderBys,
-      limit
+      reportType = 'daily' // 추가: 리포트 타입 구분
     } = body;
 
     // Analytics Data Client 생성
@@ -62,33 +52,41 @@ export async function POST(request: Request) {
       },
     });
 
-    // 리포트 요청 설정
-    const requestBody: ReportRequest = {
-      property: `properties/${propertyId}`,
-      dateRanges: [{ startDate, endDate }],
-      dimensions: dimensions || [{ name: 'date' }],
-      metrics: metrics || [
-        { name: 'activeUsers' },
-        { name: 'sessions' },
-        { name: 'screenPageViews' }
-      ],
-    };
+    let requestBody: ReportRequest;
 
-    if (orderBys) {
-      requestBody.orderBys = orderBys;
+    // 리포트 타입에 따라 다른 요청 생성
+    if (reportType === 'country') {
+      // 국가별 데이터
+      requestBody = {
+        property: `properties/${propertyId}`,
+        dateRanges: [{ startDate, endDate }],
+        dimensions: [{ name: 'country' }],
+        metrics: [
+          { name: 'activeUsers' },
+          { name: 'sessions' }
+        ],
+        orderBys: [{ metric: { metricName: 'activeUsers' }, desc: true }],
+        limit: 10
+      };
     } else {
-      // 기본 정렬: 날짜 오름차순
-      requestBody.orderBys = [{ dimension: { dimensionName: 'date' }, desc: false }];
-    }
-
-    if (limit) {
-      requestBody.limit = limit;
+      // 일별 데이터 (기본)
+      requestBody = {
+        property: `properties/${propertyId}`,
+        dateRanges: [{ startDate, endDate }],
+        dimensions: [{ name: 'date' }],
+        metrics: [
+          { name: 'activeUsers' },
+          { name: 'sessions' },
+          { name: 'screenPageViews' }
+        ],
+        orderBys: [{ dimension: { dimensionName: 'date' }, desc: false }]
+      };
     }
 
     // 데이터 요청
     const [response] = await analyticsDataClient.runReport(requestBody);
 
-    console.log('API Response Success!');
+    console.log(`API Response Success! (${reportType})`);
     return NextResponse.json(response);
     
   } catch (error) {
