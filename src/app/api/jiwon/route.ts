@@ -3,7 +3,7 @@ import { BetaAnalyticsDataClient } from "@google-analytics/data";
 
 const propertyId = process.env.jiwon_GA_PROPERTY_ID;
 
-// 서비스 계정 인증
+// GA 서비스 계정 인증
 const key = JSON.parse(process.env.jiwon_GA_CREDENTIALS || "{}");
 const client = new BetaAnalyticsDataClient({
   credentials: {
@@ -12,29 +12,43 @@ const client = new BetaAnalyticsDataClient({
   },
 });
 
-export async function GET() {
-  const today = new Date();
-  const startDate = new Date(today);
-  startDate.setMonth(startDate.getMonth() - 1); // 1개월 전
+export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const selectedDate = url.searchParams.get("date"); // YYYY-MM-DD
+
+  if (!selectedDate) {
+    return NextResponse.json({ error: "date query parameter is required" }, { status: 400 });
+  }
 
   const request = {
     property: `properties/${propertyId}`,
     dateRanges: [
       {
-        startDate: startDate.toISOString().split("T")[0],
-        endDate: today.toISOString().split("T")[0],
+        startDate: selectedDate,
+        endDate: selectedDate,
       },
     ],
-    metrics: [{ name: "activeUsers" }],
-    dimensions: [{ name: "date" }],
+    metrics: [
+      { name: "screenPageViews" },
+      { name: "activeUsers" },
+      { name: "bounceRate" },
+      { name: "averageSessionDuration" },
+    ],
+    dimensions: [{ name: "pagePath" }],
+    orderBys: [
+      { metric: { metricName: "screenPageViews" }, desc: true },
+    ],
   };
 
   const [response] = await client.runReport(request);
 
   const result = response.rows?.map((row) => ({
-    date: row.dimensionValues?.[0]?.value,
-    users: Number(row.metricValues?.[0]?.value),
-  }));
+    page: row.dimensionValues?.[0]?.value,
+    pageViews: Number(row.metricValues?.[0]?.value),
+    activeUsers: Number(row.metricValues?.[1]?.value),
+    bounceRate: Number(row.metricValues?.[2]?.value),
+    avgSessionDuration: Number(row.metricValues?.[3]?.value),
+  })) || [];
 
   return NextResponse.json(result);
 }
