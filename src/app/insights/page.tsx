@@ -2,8 +2,16 @@
 
 import { useEffect, useState } from "react";
 
+// 데이터 타입 정의
+type PageStats = {
+  page: string;
+  pageViews: number;
+  avgSessionDuration: number;
+  bounceRate: number;
+};
+
 export default function GAPageTableByDate() {
-  const [data, setData] = useState<any[]>([]);
+  const [data, setData] = useState<PageStats[]>([]);
   const [date, setDate] = useState(() => {
     const today = new Date();
     return today.toISOString().split("T")[0]; // 기본 오늘 날짜
