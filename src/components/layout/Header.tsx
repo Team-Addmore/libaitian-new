@@ -33,7 +33,7 @@ export default function Header() {
               Home
             </Link>
             <Link href="/travel" className="text-white hover:text-[#ffae00] transition-colors">
-              Libaitian-Trevel
+              Libaitian-Travel
             </Link>
             <Link href="/wechat" className="text-white hover:text-[#ffae00] transition-colors">
               Libaitian-Wechat
