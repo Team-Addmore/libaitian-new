@@ -25,9 +25,9 @@ export default function SoloLvPage() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const scheduleImages = [
-    '/images/나혼렙 홍보물/상세페이지_미니앱ver/4_detail.webp',
-    '/images/나혼렙 홍보물/상세페이지_미니앱ver/5_detail.webp',
-    '/images/나혼렙 홍보물/상세페이지_미니앱ver/6_detail.webp',
+    '/images/sololv/detail_miniapp/4_detail.webp',
+    '/images/sololv/detail_miniapp/5_detail.webp',
+    '/images/sololv/detail_miniapp/6_detail.webp',
   ];
 
   // 페이지 진입 시 측정
@@ -109,9 +109,9 @@ export default function SoloLvPage() {
         {/* 이미지 슬라이더 */}
         <div className="relative w-full h-full">
           {[
-            '/images/나혼렙 홍보물/상세페이지_미니앱ver/1_detail.webp',
-            '/images/나혼렙 홍보물/상세페이지_미니앱ver/2_detail.webp',
-            '/images/나혼렙 홍보물/상세페이지_미니앱ver/3_detail.webp'
+            '/images/sololv/detail_miniapp/1_detail.webp',
+            '/images/sololv/detail_miniapp/2_detail.webp',
+            '/images/sololv/detail_miniapp/3_detail.webp'
           ].map((poster, index) => (
             <div
               key={index}
@@ -187,7 +187,7 @@ export default function SoloLvPage() {
               {/* 주연 캐스트 */}
               <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
                 <Image
-                  src="/images/나혼렙 홍보물/상세페이지_미니앱ver/7_detail.webp"
+                  src="/images/sololv/detail_miniapp/7_detail.webp"
                   alt="주연 캐스트"
                   fill
                   className="object-contain bg-slate-900"
@@ -197,7 +197,7 @@ export default function SoloLvPage() {
               {/* 조연 캐스트 1 */}
               <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
                 <Image
-                  src="/images/나혼렙 홍보물/상세페이지_미니앱ver/8_detail.webp"
+                  src="/images/sololv/detail_miniapp/8_detail.webp"
                   alt="조연 캐스트"
                   fill
                   className="object-contain bg-slate-900"
@@ -207,7 +207,17 @@ export default function SoloLvPage() {
               {/* 조연 캐스트 2 */}
               <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
                 <Image
-                  src="/images/나혼렙 홍보물/상세페이지_미니앱ver/10_detail.webp"
+                  src="/images/sololv/detail_miniapp/9_detail.webp"
+                  alt="조연 캐스트"
+                  fill
+                  className="object-contain bg-slate-900"
+                />
+              </div>
+
+              {/* 조연 캐스트 3 */}
+              <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
+                <Image
+                  src="/images/sololv/detail_miniapp/10_detail.webp"
                   alt="조연 캐스트"
                   fill
                   className="object-contain bg-slate-900"
@@ -217,7 +227,7 @@ export default function SoloLvPage() {
               {/* 액션 퍼포머 */}
               <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
                 <Image
-                  src="/images/나혼렙 홍보물/상세페이지_미니앱ver/11_detail.webp"
+                  src="/images/sololv/detail_miniapp/11_detail.webp"
                   alt="액션 퍼포머"
                   fill
                   className="object-contain bg-slate-900"
@@ -238,7 +248,7 @@ export default function SoloLvPage() {
           {/* 슬라이더 */}
           <div className="relative">
             {/* 슬라이드 이미지 */}
-            <div className="relative aspect-[3/4] md:aspect-[2/3] max-w-[360px] md:max-w-[420px] lg:max-w-[460px] max-h-[560px] mx-auto overflow-hidden rounded-xl shadow-2xl bg-black">
+            <div className="relative aspect-square max-w-[500px] md:max-w-[700px] lg:max-w-[900px] mx-auto overflow-hidden rounded-xl shadow-2xl bg-black">
               {scheduleImages.map((image, index) => (
                 <div
                   key={index}
@@ -304,10 +314,10 @@ export default function SoloLvPage() {
             创作团队 {/* 창작팀 / 크리에이티브 팀 */}
           </h2>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="relative aspect-[9/16] md:aspect-[3/4] overflow-hidden rounded-xl shadow-lg">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
               <Image
-                src="/images/나혼렙 홍보물/상세페이지_미니앱ver/12_detail.webp"
+                src="/images/sololv/detail_miniapp/12_detail.webp"
                 alt="크리에이티브 팀"
                 fill
                 className="object-contain bg-slate-900"
@@ -324,10 +334,10 @@ export default function SoloLvPage() {
             座位示意图 {/* 좌석 배치도 */}
           </h2>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="relative aspect-[9/16] md:aspect-[3/4] overflow-hidden rounded-xl shadow-lg">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
               <Image
-                src="/images/나혼렙 홍보물/상세페이지_미니앱ver/13_seating.webp"
+                src="/images/sololv/detail_miniapp/13_seating.webp"
                 alt="좌석 배치도"
                 fill
                 className="object-contain bg-slate-900"
@@ -344,10 +354,10 @@ export default function SoloLvPage() {
             公告事项 {/* 공지사항 */}
           </h2>
 
-          <div className="max-w-3xl mx-auto">
-            <div className="relative aspect-[9/16] md:aspect-[3/4] overflow-hidden rounded-xl shadow-lg">
+          <div className="max-w-4xl mx-auto">
+            <div className="relative aspect-square overflow-hidden rounded-xl shadow-lg">
               <Image
-                src="/images/나혼렙 홍보물/상세페이지_미니앱ver/14_notice.webp"
+                src="/images/sololv/detail_miniapp/14_notice.webp"
                 alt="공지사항"
                 fill
                 className="object-contain bg-slate-900"
