@@ -34,21 +34,24 @@ export async function GET(req: Request) {
       { name: "bounceRate" },
       { name: "averageSessionDuration" },
     ],
-    dimensions: [{ name: "pagePath" }],
-    orderBys: [
-      { metric: { metricName: "screenPageViews" }, desc: true },
+    dimensions: [
+      { name: "pagePath" },
+      { name: "languageCode" } // 👈 추가된 부분
     ],
+    orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
   };
 
   const [response] = await client.runReport(request);
 
-  const result = response.rows?.map((row) => ({
-    page: row.dimensionValues?.[0]?.value,
-    pageViews: Number(row.metricValues?.[0]?.value),
-    activeUsers: Number(row.metricValues?.[1]?.value),
-    bounceRate: Number(row.metricValues?.[2]?.value),
-    avgSessionDuration: Number(row.metricValues?.[3]?.value),
-  })) || [];
+  const result =
+    response.rows?.map((row) => ({
+      page: row.dimensionValues?.[0]?.value,
+      language: row.dimensionValues?.[1]?.value, // 👈 언어 포함
+      pageViews: Number(row.metricValues?.[0]?.value),
+      activeUsers: Number(row.metricValues?.[1]?.value),
+      bounceRate: Number(row.metricValues?.[2]?.value),
+      avgSessionDuration: Number(row.metricValues?.[3]?.value),
+    })) || [];
 
   return NextResponse.json(result);
 }
