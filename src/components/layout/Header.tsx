@@ -135,18 +135,11 @@ export default function Header() {
                 Libaitian-SoloLv
               </Link>
               <Link
-                href="/jacob"
+                href="/insights"
                 className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                GA-Jacob
-              </Link>
-              <Link
-                href="/jiwon"
-                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                GA-Jiwon
+                Visitor Insights
               </Link>
               
               {/* Mobile Actions */}
