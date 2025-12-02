@@ -169,7 +169,7 @@ export default function SoloLvPage() {
             Solo Leveling Musical
           </p>
           <p className="text-base md:text-xl text-blue-300">
-            2025.12.24 - 12.31 | 首尔剧场 音乐剧 {/* 서울극장 뮤지컬 */}
+            2025.12.24 - 12.31 | 首尔木洞滑冰场 {/* 서울목동아이스링크장 */}
           </p>
         </div>
       </section>
@@ -374,7 +374,7 @@ export default function SoloLvPage() {
             立即预订门票 {/* 지금 바로 티켓 예매하기 */}
           </h2>
           <p className="text-lg md:text-xl mb-6 md:mb-8 text-blue-200">
-            2025.12.24 - 12.31 | 首尔剧场 {/* 서울극장 */}
+            2025.12.24 - 12.31 | 首尔木洞滑冰场 {/* 서울목동아이스링크장 */}
           </p>
 
           <div className="space-y-4 md:space-y-6">
