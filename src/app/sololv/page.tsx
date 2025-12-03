@@ -378,12 +378,15 @@ export default function SoloLvPage() {
           </p>
 
           <div className="space-y-4 md:space-y-6">
-            <button
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfFVY13Ykh6ndvlWSwDw2-N2AIBjU4jafOdxTllK-FOZegvjg/viewform?usp=dialog"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => trackButtonClick('book_ticket_cta', 'cta')}
               className="bg-white text-slate-900 px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg md:text-xl font-bold hover:bg-gray-100 transition shadow-lg inline-block"
             >
               预订门票 {/* 티켓 예매 */}
-            </button>
+            </a>
 
             <div className="text-blue-100 space-y-2">
               <p className="text-base md:text-lg break-all">咨询: libaitian.official@gmail.com {/* 문의 */}</p>
