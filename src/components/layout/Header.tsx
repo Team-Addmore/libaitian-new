@@ -87,11 +87,41 @@ export default function Header() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-white/10">
             <nav className="flex flex-col space-y-4 py-4">
-              <Link href={buildLink("/home")} onClick={() => setMobileMenuOpen(false)} className="text-white px-4 py-2">Home</Link>
-              <Link href={buildLink("/travel")} onClick={() => setMobileMenuOpen(false)} className="text-white px-4 py-2">Libaitian-Travel</Link>
-              <Link href={buildLink("/wechat")} onClick={() => setMobileMenuOpen(false)} className="text-white px-4 py-2">Libaitian-Wechat</Link>
-              <Link href={buildLink("/sololv")} onClick={() => setMobileMenuOpen(false)} className="text-white px-4 py-2">Libaitian-SoloLv</Link>
-              <Link href={buildLink("/insights")} onClick={() => setMobileMenuOpen(false)} className="text-white px-4 py-2">Visitor Insights</Link>
+              <Link
+                href="/home"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link
+                href="/travel"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Libaitian-Trevel
+              </Link>
+              <Link
+                href="/wechat"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Libaitian-Wechat
+              </Link>
+              <Link
+                href="/sololv"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Libaitian-SoloLv
+              </Link>
+              <Link
+                href="/insights"
+                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Visitor Insights
+              </Link>
 
               {/* Mobile Actions */}
               <div className="border-t border-white/10 pt-4 px-4 space-y-3">
