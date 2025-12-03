@@ -169,7 +169,7 @@ export default function SoloLvPage() {
             Solo Leveling Musical
           </p>
           <p className="text-base md:text-xl text-blue-300">
-            2025.12.24 - 12.31 | 首尔剧场 音乐剧 {/* 서울극장 뮤지컬 */}
+            2025.12.24 - 12.31 | 首尔木洞滑冰场 {/* 서울목동아이스링크장 */}
           </p>
         </div>
       </section>
@@ -374,16 +374,19 @@ export default function SoloLvPage() {
             立即预订门票 {/* 지금 바로 티켓 예매하기 */}
           </h2>
           <p className="text-lg md:text-xl mb-6 md:mb-8 text-blue-200">
-            2025.12.24 - 12.31 | 首尔剧场 {/* 서울극장 */}
+            2025.12.24 - 12.31 | 首尔木洞滑冰场 {/* 서울목동아이스링크장 */}
           </p>
 
           <div className="space-y-4 md:space-y-6">
-            <button
+            <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfFVY13Ykh6ndvlWSwDw2-N2AIBjU4jafOdxTllK-FOZegvjg/viewform?usp=dialog"
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => trackButtonClick('book_ticket_cta', 'cta')}
               className="bg-white text-slate-900 px-8 md:px-12 py-3 md:py-4 rounded-lg text-lg md:text-xl font-bold hover:bg-gray-100 transition shadow-lg inline-block"
             >
               预订门票 {/* 티켓 예매 */}
-            </button>
+            </a>
 
             <div className="text-blue-100 space-y-2">
               <p className="text-base md:text-lg break-all">咨询: libaitian.official@gmail.com {/* 문의 */}</p>

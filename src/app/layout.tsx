@@ -10,7 +10,8 @@ import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: 'LIBAITIAN',
-  description: '여정의 조각을 감정으로, 여행을 이야기로',
+  description: '把旅程的片段化为情感，把旅行化为故事',
+  openGraph: { images: ['/images/og/libaitianog.png'] },
   icons: {
     icon: [
       {
