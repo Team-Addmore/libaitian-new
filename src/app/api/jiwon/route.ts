@@ -14,7 +14,7 @@ const client = new BetaAnalyticsDataClient({
 
 export async function GET(req: Request) {
   const url = new URL(req.url);
-  const selectedDate = url.searchParams.get("date"); // YYYY-MM-DD
+  const selectedDate = url.searchParams.get("date");
 
   if (!selectedDate) {
     return NextResponse.json({ error: "date query parameter is required" }, { status: 400 });
@@ -29,14 +29,17 @@ export async function GET(req: Request) {
       },
     ],
     metrics: [
-      { name: "screenPageViews" },
-      { name: "activeUsers" },
-      { name: "bounceRate" },
-      { name: "averageSessionDuration" },
+      { name: "screenPageViews" },        // 페이지 조회수
+      { name: "activeUsers" },            // 활성 사용자 수
+      { name: "bounceRate" },             // 이탈률
+      { name: "averageSessionDuration" }, // 평균 세션 길이
     ],
+
     dimensions: [
-      { name: "pagePath" },
-      { name: "languageCode" } // 👈 추가된 부분
+      { name: "pagePath" },             // 방문한 페이지 경로
+      { name: "sessionSourceMedium" },  // utm_source + utm_medium (예: instagram / social)
+      { name: "sessionCampaignName" },  // utm_campaign 값
+      { name: "languageCode" },         // 사용자의 브라우저 언어
     ],
     orderBys: [{ metric: { metricName: "screenPageViews" }, desc: true }],
   };
@@ -46,7 +49,9 @@ export async function GET(req: Request) {
   const result =
     response.rows?.map((row) => ({
       page: row.dimensionValues?.[0]?.value,
-      language: row.dimensionValues?.[1]?.value, // 👈 언어 포함
+      sourceMedium: row.dimensionValues?.[1]?.value,
+      campaign: row.dimensionValues?.[2]?.value,
+      language: row.dimensionValues?.[3]?.value,
       pageViews: Number(row.metricValues?.[0]?.value),
       activeUsers: Number(row.metricValues?.[1]?.value),
       bounceRate: Number(row.metricValues?.[2]?.value),
