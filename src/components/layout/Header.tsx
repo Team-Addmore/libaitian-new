@@ -8,19 +8,26 @@ import { useSearchParams } from "next/navigation";
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  // 현재 URL UTM 정보 가져오기
+  // 현재 URL에서 UTM 수집
   const searchParams = useSearchParams();
-  const utmQuery = {
-    utm_source: searchParams.get("utm_source") || undefined,
-    utm_medium: searchParams.get("utm_medium") || undefined,
-    utm_campaign: searchParams.get("utm_campaign") || undefined,
+  const utm = {
+    utm_source: searchParams.get("utm_source"),
+    utm_medium: searchParams.get("utm_medium"),
+    utm_campaign: searchParams.get("utm_campaign"),
   };
 
-  // 링크 생성 함수 (쿼리 포함)
-  const buildLink = (path: string) => ({
-    pathname: path,
-    query: utmQuery,
-  });
+  // 실제 값이 있는 UTM만 남김
+  const validUtm = Object.fromEntries(
+    Object.entries(utm).filter(([_, v]) => v !== null)
+  );
+
+  // 링크 생성 함수 (UTM 있을 때만 붙이기)
+  const buildLink = (path: string) => {
+    if (Object.keys(validUtm).length === 0) {
+      return { pathname: path }; // UTM 없으면 쿼리 제거
+    }
+    return { pathname: path, query: validUtm };
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-[#0f3f2e]/95 backdrop-blur-md shadow-lg">
