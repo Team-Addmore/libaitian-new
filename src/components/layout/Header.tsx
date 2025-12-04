@@ -1,19 +1,45 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [clientUtm, setClientUtm] = useState<{ [key: string]: string }>({});
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(window.location.search);
+    const utm: { [key: string]: string | null } = {
+      utm_source: searchParams.get("utm_source"),
+      utm_medium: searchParams.get("utm_medium"),
+      utm_campaign: searchParams.get("utm_campaign"),
+    };
+
+    // reduce로 string만 남기기
+    const validUtm = Object.entries(utm).reduce<{ [key: string]: string }>(
+      (acc, [key, value]) => {
+        if (value) acc[key] = value;
+        return acc;
+      },
+      {}
+    );
+
+    setClientUtm(validUtm);
+  }, []);
+
+  const buildLink = (path: string) => {
+    if (Object.keys(clientUtm).length === 0) return path;
+    const params = new URLSearchParams(clientUtm).toString();
+    return `${path}?${params}`;
+  };
 
   return (
     <header className="sticky top-0 z-50 bg-[#0f3f2e]/95 backdrop-blur-md shadow-lg">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
-          
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-3">
+          {/* 로고 */}
+          <Link href={buildLink("/")} className="flex items-center gap-3">
             <div className="relative w-[50px] h-[50px]">
               <Image
                 src="/images/28cfbff63b4be.png"
@@ -29,76 +55,31 @@ export default function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/home" className="text-white hover:text-[#ffae00] transition-colors">
-              Home
-            </Link>
-            <Link href="/travel" className="text-white hover:text-[#ffae00] transition-colors">
-              Libaitian-Travel
-            </Link>
-            <Link href="/wechat" className="text-white hover:text-[#ffae00] transition-colors">
-              Libaitian-Wechat
-            </Link>
-            <Link href="/sololv" className="text-white hover:text-[#ffae00] transition-colors">
-              Libaitian-SoloLv
-            </Link>
-            <Link href="/insights" className="text-white hover:text-[#ffae00] transition-colors">
-              Visitor Insights
-            </Link>
+            <Link href={buildLink("/home")} className="text-white hover:text-[#ffae00]">Home</Link>
+            <Link href={buildLink("/travel")} className="text-white hover:text-[#ffae00]">Libaitian-Travel</Link>
+            <Link href={buildLink("/wechat")} className="text-white hover:text-[#ffae00]">Libaitian-Wechat</Link>
+            <Link href={buildLink("/sololv")} className="text-white hover:text-[#ffae00]">Libaitian-SoloLv</Link>
+            <Link href={buildLink("/insights")} className="text-white hover:text-[#ffae00]">Visitor Insights</Link>
           </nav>
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center space-x-4">
-            <button className="text-white hover:text-[#ffae00] transition-colors">
-              검색
-            </button>
-            <Link href="/login" className="text-white hover:text-[#ffae00] transition-colors">
-              로그인
-            </Link>
+            <button className="text-white hover:text-[#ffae00]">검색</button>
+            <Link href={buildLink("/login")} className="text-white hover:text-[#ffae00]">로그인</Link>
             <Link
-              href="/signup"
-              className="px-4 py-2 bg-white text-[#0f3f2e] font-medium rounded-md hover:bg-gray-200 transition-colors"
+              href={buildLink("/signup")}
+              className="px-4 py-2 bg-white text-[#0f3f2e] rounded-md hover:bg-gray-200"
             >
               회원가입
             </Link>
           </div>
 
-          {/* Mobile Button */}
+          {/* Mobile Toggle */}
           <button
             className="md:hidden text-white p-2"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label="메뉴"
           >
-            {mobileMenuOpen ? (
-              // X 아이콘
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            ) : (
-              // 아이콘
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              </svg>
-            )}
+            {mobileMenuOpen ? "✖" : "☰"}
           </button>
         </div>
 
@@ -141,23 +122,15 @@ export default function Header() {
               >
                 Visitor Insights
               </Link>
-              
+
               {/* Mobile Actions */}
               <div className="border-t border-white/10 pt-4 px-4 space-y-3">
-                <button className="w-full text-left text-white hover:text-[#ffae00] transition-colors py-2">
-                  검색
-                </button>
+                <button className="text-white">검색</button>
+                <Link href={buildLink("/login")} onClick={() => setMobileMenuOpen(false)} className="text-white">로그인</Link>
                 <Link
-                  href="/login"
-                  className="block text-white hover:text-[#ffae00] transition-colors py-2"
+                  href={buildLink("/signup")}
                   onClick={() => setMobileMenuOpen(false)}
-                >
-                  로그인
-                </Link>
-                <Link
-                  href="/signup"
-                  className="block w-full text-center px-4 py-2 bg-white text-[#0f3f2e] font-medium rounded-md hover:bg-gray-200 transition-colors"
-                  onClick={() => setMobileMenuOpen(false)}
+                  className="block w-full text-center px-4 py-2 bg-white text-[#0f3f2e] rounded-md"
                 >
                   회원가입
                 </Link>
