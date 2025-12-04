@@ -6,7 +6,8 @@ import { PieChart, Pie, Cell, Tooltip, Legend } from "recharts";
 
 type GAStats = {
   page: string;
-  sourceMedium: string;
+  source: string;
+  medium: string;
   campaign: string;
   language: string;
   pageViews: number;
@@ -39,8 +40,12 @@ export default function GAInsightsByDate() {
     fetchData(date);
   }, [date]);
 
-  // 페이지별 통계
+  // -----------------------------
+  // PAGE TAB LOGIC
+  // -----------------------------
+
   const pages = [...new Set(data.map((item) => item.page))];
+
   const groupByLanguage = (page: string) => {
     const filtered = data.filter((item) => item.page === page);
     const langCount: Record<string, number> = {};
@@ -49,22 +54,79 @@ export default function GAInsightsByDate() {
     });
     return Object.entries(langCount).map(([name, value]) => ({ name, value }));
   };
+
   const getPageTotalViews = (page: string) =>
     data.filter((d) => d.page === page).reduce((sum, item) => sum + item.pageViews, 0);
+
   const getPageAvg = (page: string) => {
     const pageItems = data.filter((d) => d.page === page);
     const avgDuration =
       pageItems.reduce((sum, item) => sum + item.avgSessionDuration, 0) / pageItems.length;
-    const avgBounce = pageItems.reduce((sum, item) => sum + item.bounceRate, 0) / pageItems.length;
+    const avgBounce =
+      pageItems.reduce((sum, item) => sum + item.bounceRate, 0) / pageItems.length;
     return { avgDuration, avgBounce };
   };
 
-  // 캠페인별 통계
-  const sources = [...new Set(data.map((item) => item.sourceMedium))];
-  const campaignsBySource = (source: string) =>
-    [...new Set(data.filter((d) => d.sourceMedium === source).map((d) => d.campaign))];
-  const pagesByCampaign = (source: string, campaign: string) =>
-    data.filter((d) => d.sourceMedium === source && d.campaign === campaign).map((d) => d.page);
+  // -----------------------------
+  // CAMPAIGN TAB LOGIC
+  // -----------------------------
+
+  const uniqueSources = [...new Set(data.map((item) => `${item.source} / ${item.medium}`))];
+
+  const campaignsBySource = (sourceMediumLabel: string) => {
+    const [source, medium] = sourceMediumLabel.split(" / ");
+
+    return [
+      ...new Set(
+        data
+          .filter((d) => d.source === source && d.medium === medium)
+          .map((d) => d.campaign)
+      ),
+    ];
+  };
+
+  const pagesByCampaign = (sourceMediumLabel: string, campaignName: string) => {
+    const [source, medium] = sourceMediumLabel.split(" / ");
+
+    return [
+      ...new Set(
+        data
+          .filter(
+            (d) =>
+              d.source === source &&
+              d.medium === medium &&
+              d.campaign === campaignName
+          )
+          .map((d) => d.page)
+      ),
+    ];
+  };
+
+  // 캠페인 기준 page 통계 계산 함수
+  const getPageStatsByCampaign = (
+    page: string,
+    source: string,
+    medium: string,
+    campaign: string
+  ) => {
+    const filtered = data.filter(
+      (d) =>
+        d.page === page &&
+        d.source === source &&
+        d.medium === medium &&
+        d.campaign === campaign
+    );
+
+    const pageViews = filtered.reduce((sum, v) => sum + v.pageViews, 0);
+    const avgDuration =
+      filtered.reduce((sum, v) => sum + v.avgSessionDuration, 0) /
+      (filtered.length || 1);
+    const avgBounce =
+      filtered.reduce((sum, v) => sum + v.bounceRate, 0) /
+      (filtered.length || 1);
+
+    return { pageViews, avgDuration, avgBounce };
+  };
 
   const COLORS = ["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#76b7b2", "#edc948"];
 
@@ -106,7 +168,9 @@ export default function GAInsightsByDate() {
       {loading ? (
         <p className="text-center py-10">📡 데이터를 불러오는 중...</p>
       ) : tab === "page" ? (
-        // 페이지별 통계
+        // -----------------------------
+        // PAGE TAB
+        // -----------------------------
         <div className="overflow-x-auto">
           <table className="w-full border border-gray-200 text-sm">
             <thead className="bg-gray-100">
@@ -126,14 +190,20 @@ export default function GAInsightsByDate() {
                     <React.Fragment key={page}>
                       <tr
                         className="hover:bg-gray-50 cursor-pointer"
-                        onClick={() => setExpandedPage(expandedPage === page ? null : page)}
+                        onClick={() =>
+                          setExpandedPage(expandedPage === page ? null : page)
+                        }
                       >
                         <td className="border px-4 py-2 text-center">{page}</td>
                         <td className="border px-4 py-2 text-center">
                           {getPageTotalViews(page).toLocaleString()}
                         </td>
-                        <td className="border px-4 py-2 text-center">{Math.round(avgDuration)}</td>
-                        <td className="border px-4 py-2 text-center">{avgBounce.toFixed(1)}</td>
+                        <td className="border px-4 py-2 text-center">
+                          {Math.round(avgDuration)}
+                        </td>
+                        <td className="border px-4 py-2 text-center">
+                          {avgBounce.toFixed(1)}
+                        </td>
                         <td className="border px-4 py-2 text-center text-blue-600">
                           {expandedPage === page ? "닫기 ▲" : "보기 ▼"}
                         </td>
@@ -180,7 +250,9 @@ export default function GAInsightsByDate() {
           </table>
         </div>
       ) : (
-        // 캠페인별 통계
+        // -----------------------------
+        // CAMPAIGN TAB
+        // -----------------------------
         <div className="overflow-x-auto">
           <table className="w-full border border-gray-200 text-sm">
             <thead className="bg-gray-100">
@@ -194,24 +266,30 @@ export default function GAInsightsByDate() {
               </tr>
             </thead>
             <tbody>
-              {sources.length ? (
-                sources.map((source) => {
-                  const campaigns = campaignsBySource(source);
+              {uniqueSources.length ? (
+                uniqueSources.map((sm) => {
+                  const [source, medium] = sm.split(" / ");
+                  const campaigns = campaignsBySource(sm);
+
                   return (
-                    <React.Fragment key={source}>
+                    <React.Fragment key={sm}>
                       <tr className="bg-gray-50 font-semibold">
-                        <td className="border px-4 py-2">{source}</td>
+                        <td className="border px-4 py-2">{sm}</td>
                         <td className="border px-4 py-2" colSpan={5}></td>
                       </tr>
 
                       {campaigns.map((camp) => {
-                        const pagesInCamp = pagesByCampaign(source, camp);
+                        const campKey = `${sm}__${camp}`;
+                        const pagesInCamp = pagesByCampaign(sm, camp);
+
                         return (
-                          <React.Fragment key={camp}>
+                          <React.Fragment key={campKey}>
                             <tr
                               className="bg-gray-100 cursor-pointer"
                               onClick={() =>
-                                setExpandedCampaign(expandedCampaign === camp ? null : camp)
+                                setExpandedCampaign(
+                                  expandedCampaign === campKey ? null : campKey
+                                )
                               }
                             >
                               <td className="border px-4 py-2"></td>
@@ -219,32 +297,42 @@ export default function GAInsightsByDate() {
                               <td className="border px-4 py-2" colSpan={3}></td>
                             </tr>
 
-                            {expandedCampaign === camp &&
-                              pagesInCamp.map((page) => {
-                                const { avgDuration, avgBounce } = getPageAvg(page);
+                            {expandedCampaign === campKey &&
+                              pagesInCamp.map((page, index) => {
+                                const stats = getPageStatsByCampaign(
+                                  page,
+                                  source,
+                                  medium,
+                                  camp
+                                );
+
+                                const pageKey = `${campKey}__${page}__${index}`;
+
                                 return (
-                                  <React.Fragment key={page}>
+                                  <React.Fragment key={pageKey}>
                                     <tr
                                       className="bg-gray-50 cursor-pointer"
                                       onClick={() =>
-                                        setExpandedPage(expandedPage === page ? null : page)
+                                        setExpandedPage(
+                                          expandedPage === pageKey ? null : pageKey
+                                        )
                                       }
                                     >
                                       <td className="border px-4 py-2"></td>
                                       <td className="border px-4 py-2"></td>
                                       <td className="border px-4 py-2">{page}</td>
                                       <td className="border px-4 py-2 text-center">
-                                        {getPageTotalViews(page).toLocaleString()}
+                                        {stats.pageViews.toLocaleString()}
                                       </td>
                                       <td className="border px-4 py-2 text-center">
-                                        {Math.round(avgDuration)}
+                                        {Math.round(stats.avgDuration)}
                                       </td>
                                       <td className="border px-4 py-2 text-center">
-                                        {avgBounce.toFixed(1)}
+                                        {stats.avgBounce.toFixed(1)}
                                       </td>
                                     </tr>
 
-                                    {expandedPage === page && (
+                                    {expandedPage === pageKey && (
                                       <tr>
                                         <td colSpan={6} className="border bg-gray-50 px-4 py-6">
                                           <h3 className="font-semibold text-center mb-4">
@@ -258,7 +346,9 @@ export default function GAInsightsByDate() {
                                                 cy="50%"
                                                 outerRadius={100}
                                                 dataKey="value"
-                                                label={(entry) => `${entry.name} (${entry.value})`}
+                                                label={(entry) =>
+                                                  `${entry.name} (${entry.value})`
+                                                }
                                               >
                                                 {groupByLanguage(page).map((_, index) => (
                                                   <Cell
