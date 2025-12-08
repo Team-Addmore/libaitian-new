@@ -19,17 +19,6 @@ declare global {
   }
 }
 
-// 기본 페이지뷰 추적
-export const trackPageView = (url: string, title?: string) => {
-  if (typeof window !== 'undefined' && window.gtag) {
-    window.gtag('event', 'page_view', {
-      page_path: url,
-      page_title: title || document.title,
-      page_location: window.location.href,
-    });
-  }
-};
-
 // 스크롤 깊이 추적
 export const trackScrollDepth = (depth: number) => {
   if (typeof window !== 'undefined' && window.gtag) {
@@ -71,18 +60,4 @@ export const trackEvent = (
   if (typeof window !== 'undefined' && window.gtag) {
     window.gtag('event', eventName, eventParams);
   }
-};
-
-// UTM 파라미터 추출
-export const getUTMParams = () => {
-  if (typeof window === 'undefined') return {};
-
-  const params = new URLSearchParams(window.location.search);
-  return {
-    utm_source: params.get('utm_source'),
-    utm_medium: params.get('utm_medium'),
-    utm_campaign: params.get('utm_campaign'),
-    utm_term: params.get('utm_term'),
-    utm_content: params.get('utm_content'),
-  };
 };
