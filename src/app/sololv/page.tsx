@@ -3,11 +3,9 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import {
-  trackPageView,
   trackScrollDepth,
   trackImageClick,
   trackButtonClick,
-  getUTMParams,
 } from '@/lib/analytics';
 
 export default function SoloLvPage() {
@@ -32,11 +30,6 @@ export default function SoloLvPage() {
 
   // 페이지 진입 시 측정
   useEffect(() => {
-    const utmParams = getUTMParams();
-    trackPageView('/sololv', 'Solo Leveling Musical');
-
-    console.log('나 혼자만 레벨업 뮤지컬 페이지 진입 - UTM:', utmParams);
-
     // 스크롤 깊이 측정
     const handleScroll = () => {
       const windowHeight = window.innerHeight;
