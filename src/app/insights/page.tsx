@@ -257,116 +257,126 @@ export default function GAInsightsByDate() {
           <table className="w-full border border-gray-200 text-sm">
             <thead className="bg-gray-100">
               <tr>
-                <th className="border px-4 py-2 text-center">세션/매체</th>
                 <th className="border px-4 py-2 text-center">캠페인</th>
+                <th className="border px-4 py-2 text-center">세션/매체</th>
                 <th className="border px-4 py-2 text-center">페이지</th>
                 <th className="border px-4 py-2 text-center">총 조회수</th>
                 <th className="border px-4 py-2 text-center">평균 체류시간(초)</th>
                 <th className="border px-4 py-2 text-center">이탈률(%)</th>
               </tr>
             </thead>
+
             <tbody>
               {uniqueSources.length ? (
-                uniqueSources.map((sm) => {
-                  const [source, medium] = sm.split(" / ");
-                  const campaigns = campaignsBySource(sm);
+                // 전체 source/medium 기준 루프 → 캠페인 기준으로 재그룹
+                [...new Set(data.map((d) => d.campaign))].map((campaignName) => {
+                  const filteredCampaign = data.filter((d) => d.campaign === campaignName);
+
+                  // 같은 캠페인에서 등장한 source/medium 리스트
+                  const smList = [
+                    ...new Set(filteredCampaign.map((d) => `${d.source} / ${d.medium}`)),
+                  ];
 
                   return (
-                    <React.Fragment key={sm}>
-                      <tr className="bg-gray-50 font-semibold">
-                        <td className="border px-4 py-2">{sm}</td>
+                    <React.Fragment key={campaignName}>
+                      {/* 캠페인 이름 최상단 */}
+                      <tr className="bg-green-100 font-semibold">
+                        <td className="border px-4 py-2">{campaignName}</td>
                         <td className="border px-4 py-2" colSpan={5}></td>
                       </tr>
 
-                      {campaigns.map((camp) => {
-                        const campKey = `${sm}__${camp}`;
-                        const pagesInCamp = pagesByCampaign(sm, camp);
+                      {smList.map((sm) => {
+                        const [source, medium] = sm.split(" / ");
+
+                        // 해당 캠페인 + Source/Medium 기준 page 목록
+                        const pages = [
+                          ...new Set(
+                            data
+                              .filter(
+                                (d) =>
+                                  d.campaign === campaignName &&
+                                  d.source === source &&
+                                  d.medium === medium
+                              )
+                              .map((d) => d.page)
+                          ),
+                        ];
 
                         return (
-                          <React.Fragment key={campKey}>
-                            <tr
-                              className="bg-gray-100 cursor-pointer"
-                              onClick={() =>
-                                setExpandedCampaign(
-                                  expandedCampaign === campKey ? null : campKey
-                                )
-                              }
-                            >
+                          <React.Fragment key={`${campaignName}-${sm}`}>
+                            {/* Source / Medium */}
+                            <tr className="bg-gray-100">
                               <td className="border px-4 py-2"></td>
-                              <td className="border px-4 py-2">{camp}</td>
-                              <td className="border px-4 py-2" colSpan={3}></td>
+                              <td className="border px-4 py-2">{sm}</td>
+                              <td className="border px-4 py-2" colSpan={4}></td>
                             </tr>
 
-                            {expandedCampaign === campKey &&
-                              pagesInCamp.map((page, index) => {
-                                const stats = getPageStatsByCampaign(
-                                  page,
-                                  source,
-                                  medium,
-                                  camp
-                                );
+                            {pages.map((page, index) => {
+                              const stats = getPageStatsByCampaign(
+                                page,
+                                source,
+                                medium,
+                                campaignName
+                              );
+                              const pageKey = `${campaignName}-${sm}-${page}-${index}`;
 
-                                const pageKey = `${campKey}__${page}__${index}`;
+                              return (
+                                <React.Fragment key={pageKey}>
+                                  <tr
+                                    className="bg-gray-50 cursor-pointer"
+                                    onClick={() =>
+                                      setExpandedPage(expandedPage === pageKey ? null : pageKey)
+                                    }
+                                  >
+                                    <td className="border px-4 py-2"></td>
+                                    <td className="border px-4 py-2"></td>
+                                    <td className="border px-4 py-2">{page}</td>
+                                    <td className="border px-4 py-2 text-center">
+                                      {stats.pageViews.toLocaleString()}
+                                    </td>
+                                    <td className="border px-4 py-2 text-center">
+                                      {Math.round(stats.avgDuration)}
+                                    </td>
+                                    <td className="border px-4 py-2 text-center">
+                                      {stats.avgBounce.toFixed(1)}
+                                    </td>
+                                  </tr>
 
-                                return (
-                                  <React.Fragment key={pageKey}>
-                                    <tr
-                                      className="bg-gray-50 cursor-pointer"
-                                      onClick={() =>
-                                        setExpandedPage(
-                                          expandedPage === pageKey ? null : pageKey
-                                        )
-                                      }
-                                    >
-                                      <td className="border px-4 py-2"></td>
-                                      <td className="border px-4 py-2"></td>
-                                      <td className="border px-4 py-2">{page}</td>
-                                      <td className="border px-4 py-2 text-center">
-                                        {stats.pageViews.toLocaleString()}
-                                      </td>
-                                      <td className="border px-4 py-2 text-center">
-                                        {Math.round(stats.avgDuration)}
-                                      </td>
-                                      <td className="border px-4 py-2 text-center">
-                                        {stats.avgBounce.toFixed(1)}
+                                  {expandedPage === pageKey && (
+                                    <tr>
+                                      <td colSpan={6} className="border bg-gray-50 px-4 py-6">
+                                        <h3 className="font-semibold text-center mb-4">
+                                          {page} 언어 사용 비율
+                                        </h3>
+                                        <div className="flex justify-center">
+                                          <PieChart width={350} height={300}>
+                                            <Pie
+                                              data={groupByLanguage(page)}
+                                              cx="50%"
+                                              cy="50%"
+                                              outerRadius={100}
+                                              dataKey="value"
+                                              label={(entry) =>
+                                                `${entry.name} (${entry.value})`
+                                              }
+                                            >
+                                              {groupByLanguage(page).map((_, idx) => (
+                                                <Cell
+                                                  key={idx}
+                                                  fill={COLORS[idx % COLORS.length]}
+                                                />
+                                              ))}
+                                            </Pie>
+                                            <Tooltip />
+                                            <Legend />
+                                          </PieChart>
+                                        </div>
                                       </td>
                                     </tr>
-
-                                    {expandedPage === pageKey && (
-                                      <tr>
-                                        <td colSpan={6} className="border bg-gray-50 px-4 py-6">
-                                          <h3 className="font-semibold text-center mb-4">
-                                            {page} 언어 사용 비율
-                                          </h3>
-                                          <div className="flex justify-center">
-                                            <PieChart width={350} height={300}>
-                                              <Pie
-                                                data={groupByLanguage(page)}
-                                                cx="50%"
-                                                cy="50%"
-                                                outerRadius={100}
-                                                dataKey="value"
-                                                label={(entry) =>
-                                                  `${entry.name} (${entry.value})`
-                                                }
-                                              >
-                                                {groupByLanguage(page).map((_, index) => (
-                                                  <Cell
-                                                    key={index}
-                                                    fill={COLORS[index % COLORS.length]}
-                                                  />
-                                                ))}
-                                              </Pie>
-                                              <Tooltip />
-                                              <Legend />
-                                            </PieChart>
-                                          </div>
-                                        </td>
-                                      </tr>
-                                    )}
-                                  </React.Fragment>
-                                );
-                              })}
+                                  )}
+                                </React.Fragment>
+                              );
+                            })}
                           </React.Fragment>
                         );
                       })}
