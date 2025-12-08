@@ -25,7 +25,7 @@ export const trackScrollDepth = (depth: number) => {
     window.gtag('event', 'scroll_depth', {
       event_category: 'engagement',
       event_label: `${depth}%`,
-      value: depth,
+      scroll_percentage: depth,
     });
   }
 };
