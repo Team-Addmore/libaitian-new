@@ -59,7 +59,6 @@ export default function Header() {
             <Link href={buildLink("/travel")} className="text-white hover:text-[#ffae00]">Libaitian-Travel</Link>
             <Link href={buildLink("/wechat")} className="text-white hover:text-[#ffae00]">Libaitian-Wechat</Link>
             <Link href={buildLink("/sololv")} className="text-white hover:text-[#ffae00]">Libaitian-SoloLv</Link>
-            <Link href={buildLink("/insights")} className="text-white hover:text-[#ffae00]">Visitor Insights</Link>
           </nav>
 
           {/* Desktop Actions */}
@@ -114,13 +113,6 @@ export default function Header() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Libaitian-SoloLv
-              </Link>
-              <Link
-                href="/insights"
-                className="text-white hover:text-[#ffae00] transition-colors px-4 py-2"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Visitor Insights
               </Link>
 
               {/* Mobile Actions */}
