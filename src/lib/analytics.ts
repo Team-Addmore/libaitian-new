@@ -61,3 +61,22 @@ export const trackEvent = (
     window.gtag('event', eventName, eventParams);
   }
 };
+
+// 캠페인 구분 적용 개선 함수
+export const trackScrollDepthV2 = (pageId: string, depth: number) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'scroll_depth', {
+      page_id: pageId,
+      scroll_percentage: depth,
+    });
+  }
+};
+
+export const trackButtonClickV2 = (pageId: string, buttonId: string) => {
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'button_click', {
+      page_id: pageId,
+      button_id: buttonId,
+    });
+  }
+};
