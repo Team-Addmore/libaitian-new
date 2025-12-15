@@ -5,7 +5,7 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.imweb.me',
+        hostname: '**.supabase.co'
       },
     ],
   },
