@@ -29,7 +29,7 @@ const pageData = {
     },
     {
       "title": "Schedule & Information",
-      "content": "Session 1: Dec 26 (Fri) 12:30 - 14:30\nSession 2: Dec 29 (Mon) 12:30 - 14:30\n\nRegistration Deadline: Dec 19 (Fri) - First come, first served\nLocation: Jeju Communication Center 5F Shared Kitchen\nFee: 77,000 KRW\nLanguage: Korean with Chinese interpretation",
+      "content": "Session 1: Dec 26 (Fri) 12:30 - 14:30\nSession 2: Dec 29 (Mon) 12:30 - 14:30\n\nRegistration Deadline: Dec 19 (Fri) - First come, first served\nLocation: Jeju Communication Center 5F Shared Kitchen\nFee: 69,000 KRW\nLanguage: Korean with Chinese interpretation",
       "image": "/images/cooking/cooking3.webp",
       "layout": "left"
     },
