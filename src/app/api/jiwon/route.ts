@@ -12,84 +12,68 @@ const client = new BetaAnalyticsDataClient({
   },
 });
 
-// Row 타입 정의
-type GAResultRow = {
-  page: string;
-  source: string;
-  medium: string;
-  campaign: string;
-  language: string;
-  pageViews: number;
-  activeUsers: number;
-  bounceRate: number;
-  avgSessionDuration: number;
-};
-
-// 그룹화 구조 타입
-type GAGroupedRow = {
-  source: string;
-  medium: string;
-  campaign: string;
-  page: string;
-  language: string;
-  pageViews: number;
-  activeUsers: number;
-  bounceRateList: number[];
-  durationList: number[];
-};
-
-// 그룹화 함수
-function groupByTraffic(rows: GAResultRow[]) {
-  const grouped: Record<string, GAGroupedRow> = {};
-
-  rows.forEach((row) => {
-    const key = `${row.source}|${row.medium}|${row.campaign}|${row.page}`;
-
-    if (!grouped[key]) {
-      grouped[key] = {
-        source: row.source,
-        medium: row.medium,
-        campaign: row.campaign,
-        page: row.page,
-        language: row.language,
-
-        pageViews: row.pageViews || 0,
-        activeUsers: row.activeUsers || 0,
-
-        bounceRateList: [row.bounceRate],
-        durationList: [row.avgSessionDuration],
-      };
-    } else {
-      grouped[key].pageViews += row.pageViews || 0;
-      grouped[key].activeUsers += row.activeUsers || 0;
-
-      grouped[key].bounceRateList.push(row.bounceRate);
-      grouped[key].durationList.push(row.avgSessionDuration);
-    }
-  });
-
-  return Object.values(grouped).map((g) => ({
-    source: g.source,
-    medium: g.medium,
-    campaign: g.campaign,
-    page: g.page,
-    language: g.language,
-
-    pageViews: g.pageViews,
-    activeUsers: g.activeUsers,
-
-    bounceRate:
-      g.bounceRateList.reduce((a, b) => a + b, 0) /
-      g.bounceRateList.length,
-
-    avgSessionDuration:
-      g.durationList.reduce((a, b) => a + b, 0) /
-      g.durationList.length,
-  }));
-}
-
 export async function GET(req: Request) {
   const url = new URL(req.url);
+  const mode = url.searchParams.get("mode");
+
+  // FUNNEL MODE
+  if (mode === "funnel") {
+    const start = url.searchParams.get("start");
+    const end = url.searchParams.get("end");
+    const campaign = url.searchParams.get("campaign");
+
+    if (!start || !end || !campaign) {
+      return NextResponse.json(
+        { error: "start, end, campaign are required" },
+        { status: 400 }
+      );
+    }
+
+    const request = {
+      property: `properties/${propertyId}`,
+      dateRanges: [{ startDate: start, endDate: end }],
+      dimensions: [{ name: "eventName" }],
+      dimensionFilter: {
+        filter: {
+          fieldName: "sessionCampaignName",
+          stringFilter: {
+            value: campaign,
+          },
+        },
+      },
+      metrics: [{ name: "eventCount" }],
+    };
+
+    const [response] = await client.runReport(request);
+
+    let sessions = 0;
+    let scroll = 0;
+    let imageClick = 0;
+    let buttonClick = 0;
+
+    response.rows?.forEach((row) => {
+      const eventName = row.dimensionValues?.[0]?.value;
+      const count = Number(row.metricValues?.[0]?.value || 0);
+
+      if (eventName === "session_start") sessions += count;
+      if (eventName === "scroll") scroll += count;
+      if (eventName === "image_click") imageClick += count;
+      if (eventName === "button_click") buttonClick += count;
+    });
+
+    return NextResponse.json({
+      exposure: null, // 노출은 아직 없음
+      inflow: sessions,
+      action: {
+        scroll,
+        imageClick,
+      },
+      conversion: buttonClick,
+    });
+  }
+
+
+  // PAGE / CAMPAIGN
   const selectedDate = url.searchParams.get("date");
 
   if (!selectedDate) {
@@ -101,12 +85,7 @@ export async function GET(req: Request) {
 
   const request = {
     property: `properties/${propertyId}`,
-    dateRanges: [
-      {
-        startDate: selectedDate,
-        endDate: selectedDate,
-      },
-    ],
+    dateRanges: [{ startDate: selectedDate, endDate: selectedDate }],
     metrics: [
       { name: "screenPageViews" },
       { name: "activeUsers" },
@@ -120,14 +99,11 @@ export async function GET(req: Request) {
       { name: "sessionCampaignName" },
       { name: "languageCode" },
     ],
-    orderBys: [
-      { metric: { metricName: "screenPageViews" }, desc: true },
-    ],
   };
 
   const [response] = await client.runReport(request);
 
-  const result: GAResultRow[] =
+  const result =
     response.rows?.map((row) => ({
       page: row.dimensionValues?.[0]?.value || "",
       source: row.dimensionValues?.[1]?.value || "",
@@ -141,7 +117,5 @@ export async function GET(req: Request) {
       avgSessionDuration: Number(row.metricValues?.[3]?.value),
     })) || [];
 
-  const groupedResult = groupByTraffic(result);
-
-  return NextResponse.json(groupedResult);
+  return NextResponse.json(result);
 }
