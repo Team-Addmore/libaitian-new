@@ -114,7 +114,7 @@ export async function GET(req: Request) {
       dateRanges: [{ startDate: start, endDate: end }],
       dimensions: [
         { name: "eventName" },
-        { name: "customEvent:button_id" }, // ⭐ 핵심
+        { name: "customEvent:button_id" },
       ],
       dimensionFilter,
       metrics: [{ name: "eventCount" }],
