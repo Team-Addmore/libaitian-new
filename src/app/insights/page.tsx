@@ -15,13 +15,57 @@ type GAStats = {
   bounceRate: number;
 };
 
+type ButtonClick = {
+  buttonId: string;
+  clicks: number;
+};
+
+type FunnelOption = {
+  campaign: string;
+  source: string;
+  medium: string;
+};
+
+type FunnelAction = {
+  scroll: number;
+  imageClick: number;
+};
+
+type FunnelData = {
+  inflow: number;
+  action: FunnelAction;
+  conversion: {
+    buttons: ButtonClick[];
+  };
+};
+
+
 export default function GAInsightsByDate() {
   const [data, setData] = useState<GAStats[]>([]);
   const [expandedPage, setExpandedPage] = useState<string | null>(null);
-  const [expandedCampaign, setExpandedCampaign] = useState<string | null>(null);
   const [date, setDate] = useState(() => new Date().toISOString().split("T")[0]);
   const [loading, setLoading] = useState(false);
-  const [tab, setTab] = useState<"page" | "campaign">("page");
+  const [tab, setTab] = useState<"page" | "campaign" | "funnel">("page");
+
+  // 퍼널 전용
+  const [funnelStart, setFunnelStart] = useState("");
+  const [funnelEnd, setFunnelEnd] = useState("");
+  const [funnelOptions, setFunnelOptions] = useState<FunnelOption[]>([]);
+  const [selectedOption, setSelectedOption] = useState<FunnelOption | null>(null);
+  const [funnelData, setFunnelData] = useState<FunnelData | null>(null);
+  const [funnelLoading, setFunnelLoading] = useState(false);
+  const [exposure, setExposure] = useState<number>(0);
+  // 퍼널 페이지 선택
+  const [selectedPage, setSelectedPage] = useState<string>("");
+  // 전환 관련
+  const [conversionMode, setConversionMode] = useState<
+    "manual" | "all_buttons" | "button_ids"
+  >("all_buttons");
+  const [manualConversion, setManualConversion] = useState<number>(0);
+  const [selectedButtonIds, setSelectedButtonIds] = useState<string[]>([]);
+  const clampPercent = (v: number) => Math.max(0, Math.min(100, v));
+
+
 
   const fetchData = async (selectedDate: string) => {
     setLoading(true);
@@ -37,8 +81,10 @@ export default function GAInsightsByDate() {
   };
 
   useEffect(() => {
-    fetchData(date);
-  }, [date]);
+    if (tab !== "funnel") {
+      fetchData(date);
+    }
+  }, [date, tab]);
 
   // -----------------------------
   // PAGE TAB LOGIC
@@ -128,6 +174,59 @@ export default function GAInsightsByDate() {
     return { pageViews, avgDuration, avgBounce };
   };
 
+  // -----------------------------
+  // funnel TAB LOGIC
+  // -----------------------------
+
+  const fetchFunnelOptions = async () => {
+    if (!funnelStart || !funnelEnd) return;
+
+    const res = await fetch(
+      `/api/jiwon?mode=funnel-options&start=${funnelStart}&end=${funnelEnd}`
+    );
+    const json = await res.json();
+    setFunnelOptions(json);
+  };
+
+  const fetchFunnelData = async () => {
+    if (!selectedOption) return;
+
+    setFunnelLoading(true);
+
+    const { campaign, source, medium } = selectedOption;
+
+    const pageParam = selectedPage ? `&page=${encodeURIComponent(selectedPage)}` : "";
+
+    const res = await fetch(
+      `/api/jiwon?mode=funnel&start=${funnelStart}&end=${funnelEnd}` +
+        `&campaign=${campaign}&source=${source}&medium=${medium}${pageParam}`
+    );
+
+    const json = await res.json();
+    setFunnelData(json);
+    setSelectedButtonIds([]);
+    setFunnelLoading(false);
+  };
+
+  const buttonList: ButtonClick[] =
+    funnelData?.conversion?.buttons ?? [];
+
+  const buttonIdConversion = buttonList
+    .filter((b) => selectedButtonIds.includes(b.buttonId))
+    .reduce((sum, b) => sum + b.clicks, 0);
+
+  const totalButtonConversion = buttonList.reduce(
+    (sum, b) => sum + b.clicks,
+    0
+  );
+
+  const finalConversion =
+    conversionMode === "manual"
+      ? manualConversion
+      : conversionMode === "button_ids"
+      ? buttonIdConversion
+      : totalButtonConversion;
+
   const COLORS = ["#4e79a7", "#59a14f", "#f28e2b", "#e15759", "#76b7b2", "#edc948"];
 
   return (
@@ -163,14 +262,23 @@ export default function GAInsightsByDate() {
         >
           캠페인별 통계
         </button>
+        <button
+          className={`px-4 py-2 font-semibold rounded ${
+            tab === "funnel" ? "bg-green-600 text-white" : "bg-gray-200"
+          }`}
+          onClick={() => setTab("funnel")}
+        >
+          퍼널 분석
+        </button>
       </div>
 
-      {loading ? (
+      {loading && (
         <p className="text-center py-10">📡 데이터를 불러오는 중...</p>
-      ) : tab === "page" ? (
-        // -----------------------------
-        // PAGE TAB
-        // -----------------------------
+      )}
+      {/* // -----------------------------
+      // PAGE TAB
+      // ----------------------------- */}
+      {!loading && tab === "page" && (
         <div className="overflow-x-auto">
           <table className="w-full border border-gray-200 text-sm">
             <thead className="bg-gray-100">
@@ -249,10 +357,11 @@ export default function GAInsightsByDate() {
             </tbody>
           </table>
         </div>
-      ) : (
-        // -----------------------------
-        // CAMPAIGN TAB
-        // -----------------------------
+      )}
+      {/* // -----------------------------
+      // CAMPAIGN TAB
+      // ----------------------------- */}
+      {!loading && tab === "campaign" && (
         <div className="overflow-x-auto">
           <table className="w-full border border-gray-200 text-sm">
             <thead className="bg-gray-100">
@@ -392,6 +501,245 @@ export default function GAInsightsByDate() {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+      {tab === "funnel" && (
+        <div className="space-y-6">
+          {/* 기간 선택 */}
+          <div className="flex gap-4 justify-center">
+            <input
+              type="date"
+              value={funnelStart}
+              onChange={(e) => setFunnelStart(e.target.value)}
+              className="border px-3 py-1 rounded"
+            />
+            <input
+              type="date"
+              value={funnelEnd}
+              onChange={(e) => setFunnelEnd(e.target.value)}
+              className="border px-3 py-1 rounded"
+            />
+            <button
+              onClick={fetchFunnelOptions}
+              className="bg-blue-600 text-white px-4 py-1 rounded"
+            >
+              캠페인 불러오기
+            </button>
+          </div>
+
+          {/* 캠페인 선택 */}
+          <div className="max-w-xl mx-auto">
+            <select
+              className="w-full border px-3 py-2 rounded"
+              onChange={(e) =>
+                setSelectedOption(JSON.parse(e.target.value))
+              }
+            >
+              <option value="">캠페인 / 세션 / 매체 선택</option>
+              {funnelOptions.map((opt, idx) => (
+                <option
+                  key={idx}
+                  value={JSON.stringify(opt)}
+                >
+                  {opt.campaign} / {opt.source} / {opt.medium}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 페이지 선택 (선택 사항) */}
+          {data.length > 0 && (
+            <div className="max-w-xl mx-auto">
+              <select
+                className="w-full border px-3 py-2 rounded"
+                value={selectedPage}
+                onChange={(e) => setSelectedPage(e.target.value)}
+              >
+                <option value="">전체 페이지 (선택 안 함)</option>
+                {[...new Set(data.map((d) => d.page))].map((page) => (
+                  <option key={page} value={page}>
+                    {page}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* 조회 버튼 */}
+          <div className="text-center">
+            <button
+              onClick={fetchFunnelData}
+              className="bg-green-600 text-white px-6 py-2 rounded"
+            >
+              퍼널 분석 조회
+            </button>
+          </div>
+          
+          {/* 퍼널 결과 */}
+          {funnelLoading && (
+            <p className="text-center">퍼널 데이터 조회 중...</p>
+          )}
+
+          {funnelData && (
+            <div className="max-w-xl mx-auto space-y-4">
+
+              {/* ================= 노출 ================= */}
+              <div className="border rounded p-4 bg-gray-50">
+                <p className="font-semibold mb-2">노출</p>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  placeholder="노출 수 입력"
+                  value={exposure === 0 ? "" : exposure}
+                  onChange={(e) => {
+                    const onlyNumber = e.target.value.replace(/[^0-9]/g, "");
+                    setExposure(onlyNumber === "" ? 0 : Number(onlyNumber));
+                  }}
+                  className="w-full border rounded px-3 py-2"
+                />
+              </div>
+
+              {/* 유입 */}
+              {(() => {
+                const inflowRate =
+                  exposure > 0
+                    ? clampPercent((funnelData.inflow / exposure) * 100)
+                    : 0;
+
+                return (
+                  <div className="relative border rounded p-4 bg-blue-50 overflow-hidden">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-blue-300 opacity-40 transition-all duration-500"
+                      style={{ width: `${inflowRate}%` }}
+                    />
+                    <div className="relative z-10">
+                      <p className="font-semibold">유입</p>
+                      <p className="text-xl">세션 수: {funnelData.inflow}</p>
+                      {exposure > 0 && (
+                        <p className="text-sm text-gray-700">
+                          유입률: {inflowRate.toFixed(1)}%
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* 행동 */}
+              {(() => {
+                const actionCount =
+                  funnelData.action.scroll + funnelData.action.imageClick;
+
+                const actionRate =
+                  exposure > 0
+                    ? clampPercent((actionCount / exposure) * 100)
+                    : 0;
+
+                return (
+                  <div className="relative border rounded p-4 bg-yellow-50 overflow-hidden">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-yellow-300 opacity-40 transition-all duration-500"
+                      style={{ width: `${actionRate}%` }}
+                    />
+                    <div className="relative z-10">
+                      <p className="font-semibold">행동</p>
+                      <p>Scroll: {funnelData.action.scroll}</p>
+                      <p>Image Click: {funnelData.action.imageClick}</p>
+                      {exposure > 0 && (
+                        <p className="text-sm text-gray-700 mt-1">
+                          행동률: {actionRate.toFixed(1)}%
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* 전환 */}
+              {(() => {
+                const conversionRate =
+                  exposure > 0
+                    ? clampPercent((finalConversion / exposure) * 100)
+                    : 0;
+
+                return (
+                  <div className="relative border rounded p-4 bg-green-50 overflow-hidden space-y-2">
+                    <div
+                      className="absolute inset-y-0 left-0 bg-green-300 opacity-40 transition-all duration-500"
+                      style={{ width: `${conversionRate}%` }}
+                    />
+                    <div className="relative z-10 space-y-2">
+                      <p className="font-semibold">전환</p>
+
+                      <select
+                        className="w-full border rounded px-3 py-2"
+                        value={conversionMode}
+                        onChange={(e) =>
+                          setConversionMode(
+                            e.target.value as "manual" | "all_buttons" | "button_ids"
+                          )
+                        }
+                      >
+                        <option value="all_buttons">전체 버튼 클릭 합</option>
+                        <option value="button_ids">특정 버튼 선택</option>
+                        <option value="manual">직접 입력</option>
+                      </select>
+
+                      {/* 직접 입력 */}
+                      {conversionMode === "manual" && (
+                        <input
+                          type="text"
+                          inputMode="numeric"
+                          pattern="[0-9]*"
+                          value={manualConversion === 0 ? "" : manualConversion}
+                          onChange={(e) => {
+                            const v = e.target.value.replace(/[^0-9]/g, "");
+                            setManualConversion(v === "" ? 0 : Number(v));
+                          }}
+                          className="w-full border rounded px-3 py-2"
+                          placeholder="전환 수 입력"
+                        />
+                      )}
+
+                      {/* button_id 선택 */}
+                      {conversionMode === "button_ids" && (
+                        <div className="space-y-1">
+                          {buttonList.map((b) => (
+                            <label
+                              key={b.buttonId}
+                              className="flex items-center gap-2 text-sm"
+                            >
+                              <input
+                                type="checkbox"
+                                checked={selectedButtonIds.includes(b.buttonId)}
+                                onChange={(e) => {
+                                  setSelectedButtonIds((prev) =>
+                                    e.target.checked
+                                      ? [...prev, b.buttonId]
+                                      : prev.filter((id) => id !== b.buttonId)
+                                  );
+                                }}
+                              />
+                              {b.buttonId} ({b.clicks})
+                            </label>
+                          ))}
+                        </div>
+                      )}
+
+                      <p className="text-xl">전환 수: {finalConversion}</p>
+
+                      {exposure > 0 && (
+                        <p className="text-sm text-gray-700">
+                          전환율: {conversionRate.toFixed(1)}%
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
       )}
     </div>
