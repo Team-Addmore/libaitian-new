@@ -1,0 +1,5 @@
+[
+  { "path": "/home", "label": "Home" },
+  { "path": "/travel", "label": "Libaitian-Travel" },
+  { "path": "/wechat", "label": "Libaitian-Wechat" }
+]
