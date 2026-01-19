@@ -1,5 +1,18 @@
 [
-  { "path": "/home", "label": "Home" },
-  { "path": "/travel", "label": "Libaitian-Travel" },
-  { "path": "/wechat", "label": "Libaitian-Wechat" }
+  {
+    "path": "/home",
+    "label": "Home"
+  },
+  {
+    "path": "/travel",
+    "label": "Libaitian-Travel"
+  },
+  {
+    "path": "/wechat",
+    "label": "Libaitian-Wechat"
+  },
+  {
+    "path": "/dfa6dee9540d404bb2179c977cfa7cad",
+    "label": "Prompt-Test"
+  }
 ]
