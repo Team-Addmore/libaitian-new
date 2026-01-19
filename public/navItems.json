@@ -10,5 +10,9 @@
   {
     "path": "/wechat",
     "label": "Libaitian-Wechat"
+  },
+  {
+    "path": "/484cbfda262a472d85ce591f4e1e41a9",
+    "label": "Prompt-Test"
   }
 ]
