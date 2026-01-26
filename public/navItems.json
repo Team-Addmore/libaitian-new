@@ -10,5 +10,9 @@
   {
     "path": "/wechat",
     "label": "Libaitian-Wechat"
+  },
+  {
+    "path": "/44b0508d6cff4ba39ccedb527d274da4",
+    "label": "redpizzabackend-test"
   }
 ]
